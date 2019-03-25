@@ -1,14 +1,29 @@
 package algorithms.mazeGenerators;
 
-public abstract class AMazeGenerator implements IMazeGenerator{
+public abstract class AMazeGenerator implements IMazeGenerator {
 
-    abstract public Maze generate(int row, int cols);
+    protected Maze mazeToGenerate;
 
-    //TODO test this method:
-    @Override
-    public long measureAlgorithmTimeMillis(int row, int col) {
-        long time = System.currentTimeMillis();
-        generate(row,col);
-        return System.currentTimeMillis()-time;
+    public AMazeGenerator(Maze mazeToGenerate) {
+        this.mazeToGenerate = mazeToGenerate;
     }
+
+    public void setMazeToGenerate(Maze mazeToGenerate) {
+        this.mazeToGenerate = mazeToGenerate;
+    }
+
+    public Maze getMazeToGenerate() {
+        return mazeToGenerate;
+    }
+
+    @Override
+    public long measureAlgorithmTimeMillis(int rows, int columns) {
+        long timeResult;
+        long startTime = System.currentTimeMillis();
+        generate(rows, columns);
+        long endTime = System.currentTimeMillis();
+        timeResult = endTime - startTime;
+        return timeResult;
+    }
+
 }

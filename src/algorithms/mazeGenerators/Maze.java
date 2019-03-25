@@ -1,42 +1,34 @@
 package algorithms.mazeGenerators;
 
-public class Maze {
+public class Maze{
 
+    private int rows;
+    private int columns;
     private int[][] maze;
-    private Position startPosition;
-    private Position endPosition;
+    Position startPosition;
+    Position goalPosition;
 
-    public Maze(int rows, int cols) {
-        maze = new int[rows][cols];
+    public Maze(int rows, int columns, int[][] maze, Position start, Position end) {
+        this.rows = rows;
+        this.columns = columns;
+        this.maze = maze;
+        this.startPosition = start;
+        this.goalPosition = end;
     }
 
-    //TODO implement this method, S for start, E for exit
-    public void print() {
-
+    public void setMaze(int[][] maze) {
+        this.maze = maze;
     }
 
+    public int[][] getMaze() {
+        return maze;
+    }
 
-    //<editor-fold desc="Getters">
-    //TODO implement
     public Position getStartPosition() {
-        return null;
-    }//hello
-
-    //TODO implement
+        return startPosition;
+    }
 
     public Position getGoalPosition() {
-        return null;
+        return goalPosition;
     }
-    //</editor-fold>
-
-
-    //<editor-fold desc="Setters">
-    public void setStartPosition(Position startPosition) {
-        this.startPosition = startPosition;
-    }
-
-    public void setEndPosition(Position endPosition) {
-        this.endPosition = endPosition;
-    }
-    //</editor-fold>
 }
