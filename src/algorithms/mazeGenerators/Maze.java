@@ -20,7 +20,7 @@ public class Maze {
     //TODO implement
     public Position getStartPosition() {
         return null;
-    }
+    }//hello
 
     //TODO implement
 
