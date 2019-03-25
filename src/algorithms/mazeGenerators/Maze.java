@@ -13,7 +13,7 @@ public class Maze {
     //TODO implement this method, S for start, E for exit
     public void print() {
 
-    }
+    }//hello
 
 
     //<editor-fold desc="Getters">
