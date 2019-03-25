@@ -2,18 +2,15 @@ package algorithms.mazeGenerators;
 
 public class SimpleMazeGenerator extends AMazeGenerator {
 
-    public SimpleMazeGenerator(Maze mazeToGenerate) {
-        super(mazeToGenerate);
-    }
-
     @Override
     public Maze generate(int rows, int columns)
     {
         if (rows <= 0 || columns <= 0)
             return null;
+        Maze mazeResult = new Maze(rows, columns);
         Position start = new Position(0, 0);
-        Position end = new Position(rows - 1, columns - 1);
-        int[][] simpleMaze = new int[rows][columns];
+        Position goal = new Position(rows - 1, columns - 1);
+        int[][] simpleMaze = mazeResult.getMaze();
         for(int i=0; i<rows; i++)//Creates a random maze
         {
             for(int j=0; j<columns; j++)
@@ -35,9 +32,8 @@ public class SimpleMazeGenerator extends AMazeGenerator {
                 simpleMaze[k][t+1] = 0;
             t++;
         }
-//
-        Maze mazeResult = new Maze(rows, columns, simpleMaze, start, end);
-        this.mazeToGenerate = mazeResult;
-        return this.mazeToGenerate;
+        mazeResult.setStartPosition(start);
+        mazeResult.setGoalPosition(goal);
+        return mazeResult;
     }
 }

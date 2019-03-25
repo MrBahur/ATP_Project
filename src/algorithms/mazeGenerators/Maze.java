@@ -8,16 +8,10 @@ public class Maze{
     Position startPosition;
     Position goalPosition;
 
-    public Maze(int rows, int columns, int[][] maze, Position start, Position end) {
+    public Maze(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        this.maze = maze;
-        this.startPosition = start;
-        this.goalPosition = end;
-    }
-
-    public void setMaze(int[][] maze) {
-        this.maze = maze;
+        maze = new int[rows][columns];
     }
 
     public int[][] getMaze() {
@@ -30,5 +24,30 @@ public class Maze{
 
     public Position getGoalPosition() {
         return goalPosition;
+    }
+
+    public void setStartPosition(Position startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public void setGoalPosition(Position goalPosition) {
+        this.goalPosition = goalPosition;
+    }
+
+    public void print(){
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j <columns ; j++) {
+                if(i==startPosition.getRowIndex() & j == startPosition.getColumnIndex()){
+                    System.out.print("S");
+                }
+                else if(i==goalPosition.getRowIndex() & j== goalPosition.getColumnIndex()){
+                    System.out.print("E");
+                }
+                else{
+                    System.out.print(maze[i][j]);
+                }
+            }
+            System.out.println();
+        }
     }
 }

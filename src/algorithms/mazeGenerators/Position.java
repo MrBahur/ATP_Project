@@ -1,5 +1,7 @@
 package algorithms.mazeGenerators;
 
+import javafx.geometry.Pos;
+
 public class Position
 {
     private int rowIndex;
@@ -17,4 +19,17 @@ public class Position
     public int getColumnIndex() {
         return columnIndex;
     }
+
+    @Override
+    public String toString() {
+        return "{"+rowIndex+","+columnIndex+"}";
+    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        if(!(obj instanceof Position))
+//            return false;
+//        Position other = (Position)obj;
+//        return other.columnIndex==columnIndex & other.rowIndex==rowIndex;
+//    }
 }
