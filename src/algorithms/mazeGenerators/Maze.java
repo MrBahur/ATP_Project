@@ -26,6 +26,14 @@ public class Maze{
         return goalPosition;
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
     public void setStartPosition(Position startPosition) {
         this.startPosition = startPosition;
     }
