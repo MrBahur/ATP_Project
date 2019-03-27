@@ -25,11 +25,11 @@ public class Position
         return "{"+rowIndex+","+columnIndex+"}";
     }
 
-//    @Override
-//    public boolean equals(Object obj) {
-//        if(!(obj instanceof Position))
-//            return false;
-//        Position other = (Position)obj;
-//        return other.columnIndex==columnIndex & other.rowIndex==rowIndex;
-//    }
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Position))
+            return false;
+        Position other = (Position)obj;
+        return other.columnIndex==columnIndex & other.rowIndex==rowIndex;
+    }
 }
