@@ -44,18 +44,19 @@ public class Maze{
 
     public void print(){
         for (int i = 0; i < rows; i++) {
+            System.out.print("[ ");
             for (int j = 0; j <columns ; j++) {
                 if(i==startPosition.getRowIndex() & j == startPosition.getColumnIndex()){
-                    System.out.print("S");
+                    System.out.print("S ");
                 }
                 else if(i==goalPosition.getRowIndex() & j== goalPosition.getColumnIndex()){
-                    System.out.print("E");
+                    System.out.print("E ");
                 }
                 else{
-                    System.out.print(maze[i][j]);
+                    System.out.print(maze[i][j]+" ");
                 }
             }
-            System.out.println();
+            System.out.println("]");
         }
     }
 }

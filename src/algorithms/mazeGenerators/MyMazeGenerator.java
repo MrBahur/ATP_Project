@@ -41,7 +41,7 @@ public class MyMazeGenerator extends AMazeGenerator {
                 mazePositions.get(positionsCount).add(p);//At the beginning every list on the mazePositions has a single node
                 positionsCount++;
                 if (i - 2 >= 0) firstOpenPositionsDirections.get(0).add(p); //p has an open position above it
-                if (i + 2 < rows) firstOpenPositionsDirections.get(1).add(p); //p has an open position beneath it
+                if (i + 2 < rows) firstOpenPositionsDirections.get(1).add(p); //p has an open position below it
                 if (j + 2 < cols) firstOpenPositionsDirections.get(2).add(p);//p has an open position on it's right
                 if (j - 2 >= 0) firstOpenPositionsDirections.get(3).add(p);//p has an open position on it's left
             }
