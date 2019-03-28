@@ -49,9 +49,9 @@ public class Maze{
                 if(i==startPosition.getRowIndex() & j == startPosition.getColumnIndex()){
                     System.out.print("S ");
                 }
-                else if(i==goalPosition.getRowIndex() & j== goalPosition.getColumnIndex()){
-                    System.out.print("E ");
-                }
+//                else if(i==goalPosition.getRowIndex() & j== goalPosition.getColumnIndex()){
+//                    System.out.print("E ");
+//                }
                 else{
                     System.out.print(maze[i][j]+" ");
                 }
