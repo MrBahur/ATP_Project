@@ -22,7 +22,8 @@ public class MyMazeGenerator extends AMazeGenerator {
         mazeMatrix[currentCell.getRowIndex()][currentCell.getColumnIndex()] = 0;
         visited[currentCell.getRowIndex()][currentCell.getColumnIndex()] = true;
         Stack<Position> stack = new Stack<>();
-        //stack.push(currentCell);
+        Position lastPosition = currentCell;
+        int longestRoad = 0;
         do {
             ArrayList<Position> notVisitedNeighbours = null;
             if ((notVisitedNeighbours = getNotVisitedNeighbours(visited, currentCell)) != null) {
@@ -30,11 +31,15 @@ public class MyMazeGenerator extends AMazeGenerator {
                 int chosen = (int) (Math.random() * numOfNeighbours);
                 stack.push(currentCell);
                 currentCell = nextCell(currentCell, notVisitedNeighbours.get(chosen), mazeMatrix, visited);
+                if(stack.size()>longestRoad){
+                    longestRoad = stack.size();
+                    lastPosition = currentCell;
+                }
             } else {
                 currentCell = stack.pop();
             }
         } while (!stack.empty());
-
+        maze.setGoalPosition(lastPosition);
         return maze;
     }
 
