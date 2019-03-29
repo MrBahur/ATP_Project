@@ -6,5 +6,5 @@ public interface ISearchingAlgorithm {
 
     String getName();
 
-    AState solve(ISearchable domain);
+    Solution solve(ISearchable domain);
 }
