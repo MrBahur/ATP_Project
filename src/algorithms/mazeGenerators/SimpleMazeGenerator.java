@@ -17,30 +17,33 @@ public class SimpleMazeGenerator extends AMazeGenerator {
                 simpleMaze[i][j] = randomCell;
             }
         }
-        int k=0, t=0;
-        boolean rowsFull = false, colsFull = false;
-        for (int stepsCounter=0; stepsCounter < rows+columns; stepsCounter++) //Creates a path from the start position to the end position
+        simpleMaze[0][0] = 0;
+        simpleMaze[rows-1][columns-1]=0;
+        int k = 0, t = 0;
+        boolean rowsFull = false, colsFull = false,
+                downOrRight = false;// down = false, right = true
+        for (int stepsCounter = 0; stepsCounter < (rows + columns-2); stepsCounter++) //Creates a path from the start position to the end position
         {
-            int randomStep = (int) Math.round(Math.random());
-            if (randomStep == 1)//Step down
-            {
-                if (rowsFull==false){
-                    simpleMaze[k][t] = 0;
-                    k++;
-                    if(k==rows){
-                        k--;
-                        rowsFull=true;
-                    }
-                }
-            } else if (colsFull == false)//Go right
-            {
-                simpleMaze[k][t] = 0;
+            int randomStep = (int) (Math.random() * 2); //1 go right 0 go down
+            if (randomStep == 0) {//down
+                downOrRight = rowsFull;
+            } else {//right
+                downOrRight = !colsFull;
+            }
+            if(downOrRight){
                 t++;
-                if (t==columns) {
-                    t--;
+                if(t==columns-1){
                     colsFull = true;
                 }
+            }else{
+                k++;
+                if(k==rows-1){
+                    rowsFull = true;
+                }
             }
+            simpleMaze[k][t]=0;
+
+
         }
         mazeResult.setStartPosition(start);
         mazeResult.setGoalPosition(goal);
