@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class MyMazeGenerator extends AMazeGenerator {
-
     @Override
     public Maze generate(int rows, int cols) {
 
@@ -31,7 +30,7 @@ public class MyMazeGenerator extends AMazeGenerator {
                 int chosen = (int) (Math.random() * numOfNeighbours);
                 stack.push(currentCell);
                 currentCell = nextCell(currentCell, notVisitedNeighbours.get(chosen), mazeMatrix, visited);
-                if(stack.size()>longestRoad){
+                if (stack.size() > longestRoad) {
                     longestRoad = stack.size();
                     lastPosition = currentCell;
                 }
@@ -61,21 +60,20 @@ public class MyMazeGenerator extends AMazeGenerator {
         if (rowIndex + 2 < rows && !visited[rowIndex + 2][colIndex]) {//UP
             p.add(new Position(rowIndex + 2, colIndex));
         }
-        if (rowIndex - 2 >= 0 && !visited[rowIndex - 2][colIndex]) {//DOWN
-            p.add(new Position(rowIndex - 2, colIndex));
-        }
         if (colIndex + 2 < cols && !visited[rowIndex][colIndex + 2]) {//RIGHT
             p.add(new Position(rowIndex, colIndex + 2));
+        }
+        if (rowIndex - 2 >= 0 && !visited[rowIndex - 2][colIndex]) {//DOWN
+            p.add(new Position(rowIndex - 2, colIndex));
         }
         if (colIndex - 2 >= 0 && !visited[rowIndex][colIndex - 2]) {//LEFT
             p.add(new Position(rowIndex, colIndex - 2));
         }
+
         if (p.size() == 0) {
             return null;
         } else {
             return p;
         }
     }
-
 }
-
