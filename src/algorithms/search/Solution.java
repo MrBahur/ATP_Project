@@ -2,10 +2,13 @@ package algorithms.search;
 
 import java.util.ArrayList;
 
-public class Solution {
-    private AState state;
-
-    public ArrayList<AState> getSolutionPath() {
-        return null;
-    }
+public class Solution extends AState{
+//
+//    public Solution(String state) {
+//        super(state);
+//    }
+//
+//    public ArrayList<AState> getSolutionPath() {
+//        return null;
+//    }
 }
