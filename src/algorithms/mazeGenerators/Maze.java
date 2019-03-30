@@ -1,6 +1,6 @@
 package algorithms.mazeGenerators;
 
-public class Maze{
+public class Maze {
 
     private int rows;
     private int columns;
@@ -42,18 +42,16 @@ public class Maze{
         this.goalPosition = goalPosition;
     }
 
-    public void print(){
+    public void print() {
         for (int i = 0; i < rows; i++) {
             System.out.print("[ ");
-            for (int j = 0; j <columns ; j++) {
-                if(i==startPosition.getRowIndex() & j == startPosition.getColumnIndex()){
+            for (int j = 0; j < columns; j++) {
+                if (i == startPosition.getRowIndex() & j == startPosition.getColumnIndex()) {
                     System.out.print("S ");
-                }
-                else if(i==goalPosition.getRowIndex() & j== goalPosition.getColumnIndex()){
+                } else if (i == goalPosition.getRowIndex() & j == goalPosition.getColumnIndex()) {
                     System.out.print("E ");
-                }
-                else{
-                    System.out.print(maze[i][j]+" ");
+                } else {
+                    System.out.print(maze[i][j] + " ");
                 }
             }
             System.out.println("]");

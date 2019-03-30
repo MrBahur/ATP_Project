@@ -18,11 +18,11 @@ public class SimpleMazeGenerator extends AMazeGenerator {
             }
         }
         simpleMaze[0][0] = 0;
-        simpleMaze[rows-1][columns-1]=0;
+        simpleMaze[rows - 1][columns - 1] = 0;
         int k = 0, t = 0;
         boolean rowsFull = false, colsFull = false,
                 downOrRight = false;// down = false, right = true
-        for (int stepsCounter = 0; stepsCounter < (rows + columns-2); stepsCounter++) //Creates a path from the start position to the end position
+        for (int stepsCounter = 0; stepsCounter < (rows + columns - 2); stepsCounter++) //Creates a path from the start position to the end position
         {
             int randomStep = (int) (Math.random() * 2); //1 go right 0 go down
             if (randomStep == 0) {//down
@@ -30,18 +30,18 @@ public class SimpleMazeGenerator extends AMazeGenerator {
             } else {//right
                 downOrRight = !colsFull;
             }
-            if(downOrRight){
+            if (downOrRight) {
                 t++;
-                if(t==columns-1){
+                if (t == columns - 1) {
                     colsFull = true;
                 }
-            }else{
+            } else {
                 k++;
-                if(k==rows-1){
+                if (k == rows - 1) {
                     rowsFull = true;
                 }
             }
-            simpleMaze[k][t]=0;
+            simpleMaze[k][t] = 0;
 
 
         }

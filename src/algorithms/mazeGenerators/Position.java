@@ -2,8 +2,7 @@ package algorithms.mazeGenerators;
 
 import javafx.geometry.Pos;
 
-public class Position
-{
+public class Position {
     private int rowIndex;
     private int columnIndex;
 
@@ -22,14 +21,14 @@ public class Position
 
     @Override
     public String toString() {
-        return "{"+rowIndex+","+columnIndex+"}";
+        return "{" + rowIndex + "," + columnIndex + "}";
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof Position))
+        if (!(obj instanceof Position))
             return false;
-        Position other = (Position)obj;
-        return other.columnIndex==columnIndex & other.rowIndex==rowIndex;
+        Position other = (Position) obj;
+        return other.columnIndex == columnIndex & other.rowIndex == rowIndex;
     }
 }

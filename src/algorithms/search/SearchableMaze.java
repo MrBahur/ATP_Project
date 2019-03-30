@@ -4,7 +4,7 @@ import algorithms.mazeGenerators.Maze;
 
 import java.util.ArrayList;
 
-public class SearchableMaze implements ISearchable{
+public class SearchableMaze implements ISearchable {
     private Maze maze;
 
     public SearchableMaze(Maze maze) {
