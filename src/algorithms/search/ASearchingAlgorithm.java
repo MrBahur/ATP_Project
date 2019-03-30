@@ -1,6 +1,6 @@
 package algorithms.search;
 
-public abstract class ASearchingAlgorithm implements ISearchingAlgorithm{
+public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
 
     @Override
     public int getNumberOfNodesEvaluated() {
