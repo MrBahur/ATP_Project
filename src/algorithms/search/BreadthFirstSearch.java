@@ -52,6 +52,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
             for (AState s: colour.keySet()   ) {
                 if(goal.hashCode()==s.hashCode() && goal.equals(s)){
                     goal = s;
+                    break;
                 }
             }
             return new Solution(goal);
