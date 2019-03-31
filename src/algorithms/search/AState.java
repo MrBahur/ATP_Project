@@ -10,8 +10,10 @@ public abstract class AState{
     private double cost;
     private AState cameFrom;
 
-    public AState(String state) {
+    public AState(String state, double cost, AState cameFrom) {
         this.state = state;
+        this.cost = cost;
+        this.cameFrom = cameFrom;
     }
 
     public String getState() {

@@ -5,11 +5,11 @@ import algorithms.mazeGenerators.Position;
 
 public class MazeState extends AState {
 
-    Maze maze;
-    Position currentPosition;
+    private Maze maze;
+    private Position currentPosition;
 
-    public MazeState(Maze maze, Position currentPosition) {
-        super(currentPosition.toString());
+    public MazeState(Maze maze, Position currentPosition, double cost, MazeState previousState) {
+        super(currentPosition.toString(), cost, previousState);
         this.maze = maze;
         this.currentPosition = currentPosition;
     }
