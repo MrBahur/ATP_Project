@@ -24,10 +24,10 @@ public class MazeState extends AState {
 
 
     @Override
-    public boolean equals(AState aState) {
-        if (!(aState instanceof MazeState))
+    public boolean equals(Object o) {
+        if (!(o instanceof MazeState))
             return false;
-        MazeState other = (MazeState) aState;
+        MazeState other = (MazeState) o;
         return other.currentPosition.equals(currentPosition);
     }
 }

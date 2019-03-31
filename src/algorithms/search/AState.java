@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public abstract class AState{
 
-    public  abstract boolean equals(AState aState);
+    @Override
+    public abstract boolean equals(Object o);
 
     private String state;
     private double cost;
