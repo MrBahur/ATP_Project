@@ -1,7 +1,11 @@
 package algorithms.search;
 
-public abstract class AState implements ISearchable{
-//
+import java.util.ArrayList;
+
+public abstract class AState{
+
+    public  abstract boolean equals(AState aState);
+
 //    private String state;
 //    private double cost;
 //    private AState cameFrom;
@@ -34,4 +38,5 @@ public abstract class AState implements ISearchable{
 //        this.cameFrom = cameFrom;
 //    }
 }
+
 

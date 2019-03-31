@@ -1,4 +1,4 @@
-package algorithms.search;
-
-public class BreadthFirstSearch extends ASearchingAlgorithm {
-}
+//package algorithms.search;
+//
+//public class BreadthFirstSearch extends ASearchingAlgorithm {
+//}
