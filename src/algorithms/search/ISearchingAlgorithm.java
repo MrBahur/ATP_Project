@@ -4,7 +4,7 @@ public interface ISearchingAlgorithm {
 
     int getNumberOfNodesEvaluated();
 
-   String getName();
+    String getName();
 
     Solution solve(ISearchable domain);
 }

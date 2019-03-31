@@ -9,6 +9,7 @@ public class MazeState extends AState {
     Position currentPosition;
 
     public MazeState(Maze maze, Position currentPosition) {
+        super(currentPosition.toString());
         this.maze = maze;
         this.currentPosition = currentPosition;
     }
@@ -26,7 +27,7 @@ public class MazeState extends AState {
     public boolean equals(AState aState) {
         if (!(aState instanceof MazeState))
             return false;
-        MazeState other = (MazeState)aState;
+        MazeState other = (MazeState) aState;
         return other.currentPosition.equals(currentPosition);
     }
 }
