@@ -40,6 +40,16 @@ public abstract class AState{
     public void setCameFrom(AState cameFrom) {
         this.cameFrom = cameFrom;
     }
+
+    @Override
+    public String toString() {
+        return getState();
+    }
+
+    @Override
+    public int hashCode() {
+        return getState().hashCode();
+    }
 }
 
 

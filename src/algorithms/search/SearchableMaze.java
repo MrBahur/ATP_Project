@@ -37,37 +37,36 @@ public class SearchableMaze implements ISearchable {
         if (this.maze != m.getMaze()) {
             throw new IllegalArgumentException("this is a maze state but not of this maze");
         }
-
-        int xPosition = m.getCurrentPosition().getRowIndex();
-        int yPosition = m.getCurrentPosition().getColumnIndex();
+        int rowIndex = m.getCurrentPosition().getRowIndex();
+        int columnIndex = m.getCurrentPosition().getColumnIndex();
         ArrayList<AState> toReturn = new ArrayList<>();
-        boolean canMoveUp = yPosition + 1 < maze.getRows() && maze.getMaze()[xPosition][yPosition + 1] == 0;
-        boolean canMoveDown = yPosition - 1 >= 0 && maze.getMaze()[xPosition][yPosition - 1] == 0;
-        boolean canMoveRight = xPosition + 1 < maze.getColumns() && maze.getMaze()[xPosition + 1][yPosition] == 0;
-        boolean canMoveLeft = xPosition - 1 > 0 && maze.getMaze()[xPosition - 1][yPosition] == 0;
+        boolean canMoveUp = rowIndex - 1 >= 0 && m.getMaze().getMaze()[rowIndex - 1][columnIndex] == 0;
+        boolean canMoveDown = rowIndex + 1 < m.getMaze().getRows() && m.getMaze().getMaze()[rowIndex + 1][columnIndex] == 0;
+        boolean canMoveRight = columnIndex + 1 < m.getMaze().getColumns() && m.getMaze().getMaze()[rowIndex][columnIndex + 1] == 0;
+        boolean canMoveLeft = columnIndex - 1 >= 0 && m.getMaze().getMaze()[rowIndex][columnIndex - 1] == 0;
         if (canMoveUp) {
-            toReturn.add(new MazeState(maze, new Position(xPosition, yPosition + 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex), Double.POSITIVE_INFINITY, m));
         }
         if (canMoveDown) {
-            toReturn.add(new MazeState(maze, new Position(xPosition, yPosition - 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex), Double.POSITIVE_INFINITY, m));
         }
         if (canMoveRight) {
-            toReturn.add(new MazeState(maze, new Position(xPosition + 1, yPosition), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex, columnIndex + 1), Double.POSITIVE_INFINITY, m));
         }
         if (canMoveLeft) {
-            toReturn.add(new MazeState(maze, new Position(xPosition - 1, yPosition), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex, columnIndex - 1), Double.POSITIVE_INFINITY, m));
         }
-        if (canMoveUp & canMoveRight) {
-            toReturn.add(new MazeState(maze, new Position(xPosition + 1, yPosition + 1), Double.POSITIVE_INFINITY, m));
+        if (canMoveUp && canMoveRight && m.getMaze().getMaze()[rowIndex - 1][columnIndex + 1] == 0) {
+            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex + 1), Double.POSITIVE_INFINITY, m));
         }
-        if (canMoveUp & canMoveLeft) {
-            toReturn.add(new MazeState(maze, new Position(xPosition - 1, yPosition + 1), Double.POSITIVE_INFINITY, m));
+        if (canMoveUp && canMoveLeft && m.getMaze().getMaze()[rowIndex - 1][columnIndex - 1] == 0) {
+            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex - 1), Double.POSITIVE_INFINITY, m));
         }
-        if (canMoveDown & canMoveRight) {
-            toReturn.add(new MazeState(maze, new Position(xPosition + 1, yPosition - 1), Double.POSITIVE_INFINITY, m));
+        if (canMoveDown && canMoveRight && m.getMaze().getMaze()[rowIndex + 1][columnIndex + 1] == 0) {
+            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex + 1), Double.POSITIVE_INFINITY, m));
         }
-        if (canMoveDown & canMoveLeft) {
-            toReturn.add(new MazeState(maze, new Position(xPosition - 1, yPosition - 1), Double.POSITIVE_INFINITY, m));
+        if (canMoveDown && canMoveLeft && m.getMaze().getMaze()[rowIndex + 1][columnIndex - 1] == 0) {
+            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex - 1), Double.POSITIVE_INFINITY, m));
         }
 
         return toReturn;

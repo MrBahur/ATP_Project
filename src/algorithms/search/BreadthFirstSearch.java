@@ -10,7 +10,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
 
     public BreadthFirstSearch() {
         super("Breadth First Search");
-        queue = new PriorityQueue<>();
+        queue = new LinkedList<>();
         colour = new HashMap<>();
     }
 
@@ -49,6 +49,11 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
         if (colour.get(goal) == 0) {
             return null;
         } else {// color ==2
+            for (AState s: colour.keySet()   ) {
+                if(goal.hashCode()==s.hashCode() && goal.equals(s)){
+                    goal = s;
+                }
+            }
             return new Solution(goal);
         }
     }
