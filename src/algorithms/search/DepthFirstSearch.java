@@ -5,116 +5,49 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class DepthFirstSearch extends ASearchingAlgorithm {
+    private HashMap<AState, Boolean> nodesStatus;
+    private Stack<AState> stack;
 
     public DepthFirstSearch() {
         super("Depth First Search");
-    }
-
-    @Override
-
-    public int getNumberOfNodesEvaluated() {
-        return 0;
+        nodesStatus = new HashMap<>(); // false - not yet visited, true - visited
+        stack = new Stack<>();
     }
 
     public Solution solve(ISearchable domain) {
 
         AState startState = domain.getStartState();
         AState goalState = domain.getGoalState();
-        Stack<AState> stack = new Stack<>();
-        AState currentState = startState;
+        AState currentState;
         ArrayList<AState> allSuccessors;
-
         stack.push(startState);
         while (!(stack.empty())) {
-
             currentState = stack.pop();
-            currentState.setVisited(true);
+            setNumOfNodeEvaluated(getNumberOfNodesEvaluated() + 1);
+            if (currentState.equals(goalState)) {
+                return new Solution(currentState);
+            }
+            setVisited(nodesStatus, currentState);
             allSuccessors = domain.getAllSuccessors(currentState);
 
-            if (allSuccessors.isEmpty()) {
-                continue;
+            for (AState s : allSuccessors) {
+                if (!(isVisited(nodesStatus, s))) {
+                    stack.push(s);
+                    setVisited(nodesStatus, s);
+                    s.setCameFrom(currentState);
+                }
             }
-
-            AState nextSuccessor = allSuccessors.get(0);
-            while (nextSuccessor.isVisited() && allSuccessors.size() > 1) {
-                allSuccessors.remove(0);
-                nextSuccessor = allSuccessors.get(0);
-            }
-
-            if (nextSuccessor.isVisited()) {
-                continue;
-            }
-
-            nextSuccessor.setCameFrom(currentState);
-
-            if (nextSuccessor.equals(goalState)) {
-                return new Solution(nextSuccessor);
-            }
-            stack.push(currentState);
-            stack.push(nextSuccessor);
         }
-
         return null;
     }
 
-//    private boolean alreadyVisited(ArrayList<AState> visited, AState checkIfVisited) {
-//        for (AState state : visited) {
-//            if (state.equals(checkIfVisited))
-//                return true;
-//        }
-//        return false;
-//    }
+    private void setVisited(HashMap<AState, Boolean> nodesStatus, AState visitedState) {
+        if (!nodesStatus.containsKey(visitedState)) {
+            nodesStatus.put(visitedState, true);
+        }
+    }
 
-//        AState startState = domain.getStartState();
-//        AState goalState = domain.getGoalState();
-//        ArrayList<AState> evaluatedStates = new ArrayList<>();
-//        AState solutionState = isSolved(domain, startState, goalState, evaluatedStates);
-//        if (solutionState != null) {
-//            Solution solution = new Solution(solutionState);
-//            return solution;
-//        }
-//        return null;
-//    }
-//
-//    private AState isSolved(ISearchable domain, AState currentState, AState goalState,
-//                            ArrayList<AState> evaluatedStates) {
-//
-//        evaluatedStates.add(currentState);
-//        if (currentState.equals(goalState)) {
-//            return currentState;
-//        }
-//
-//        ArrayList<AState> currentSuccessors = domain.getAllSuccessors(currentState);
-//        if (currentSuccessors.size() == 0) {
-//            evaluatedStates.remove(evaluatedStates.size() - 1);
-//            return null;
-//        }
-//
-//        AState solutionState = null;
-//        while (solutionState == null && currentSuccessors.size() > 0) {
-//            AState successor = currentSuccessors.get(0);
-//            if (isEvaluated(evaluatedStates, successor)) {
-//                currentSuccessors.remove(0);
-//                continue;
-//            }
-//            solutionState = isSolved(domain, successor, goalState, evaluatedStates);
-//            if (solutionState != null) {
-//                successor.setCameFrom(currentState);
-//                return solutionState;
-//            }
-//            if (solutionState == null)
-//                currentSuccessors.remove(0);
-//        }
-//        return null;
-//    }
-//
-//    private boolean isEvaluated(ArrayList<AState> evaluatedStates, AState checkIfEvaluated) {
-//        for (AState state : evaluatedStates) {
-//            if (state.equals(checkIfEvaluated))
-//                return true;
-//        }
-//        return false;
-//    }
-
-
+    private boolean isVisited(HashMap<AState, Boolean> nodesStatus, AState stateToCheck) {
+        return nodesStatus.containsKey(stateToCheck);
+    }
 }

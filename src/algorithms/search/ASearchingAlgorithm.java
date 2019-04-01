@@ -3,10 +3,7 @@ package algorithms.search;
 import java.util.Queue;
 
 public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
-
     private int numOfNodeEvaluated;
-    protected Queue<AState> queue;
-    private String name;
 
 
     public ASearchingAlgorithm(String name) {
@@ -14,6 +11,7 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
         this.numOfNodeEvaluated = 0;
     }
 
+    private String name;
 
     @Override
     public int getNumberOfNodesEvaluated() {
