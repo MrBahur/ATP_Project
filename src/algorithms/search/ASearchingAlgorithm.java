@@ -4,7 +4,7 @@ import java.util.Queue;
 
 public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
     private int numOfNodeEvaluated;
-    protected Queue<AState> queue;
+
 
     public ASearchingAlgorithm(String name) {
         this.name = name;
