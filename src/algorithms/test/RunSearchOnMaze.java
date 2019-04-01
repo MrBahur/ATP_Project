@@ -1,5 +1,6 @@
 package algorithms.test;
 
+import algorithms.mazeGenerators.EmptyMazeGenerator;
 import algorithms.mazeGenerators.IMazeGenerator;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MyMazeGenerator;
@@ -12,17 +13,19 @@ public class RunSearchOnMaze {
 
     public static void main(String[] args) {
         IMazeGenerator mg = new MyMazeGenerator();
-        Maze maze = mg.generate(4, 4);
+        Maze maze = mg.generate(10, 10);
         maze.print();
         SearchableMaze searchableMaze = new SearchableMaze(maze);
-        solveProblem(searchableMaze, new BreadthFirstSearch());
-        //solveProblem(searchableMaze, new DepthFirstSearch());
+        //solveProblem(searchableMaze, new BreadthFirstSearch());
+        solveProblem(searchableMaze, new DepthFirstSearch());
         //solveProblem(searchableMaze, new BestFirstSearch());
     }
 
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {
         //Solve a searching problem with a searcher
+        long startTime = System.currentTimeMillis();
         Solution solution = searcher.solve(domain);
+        System.out.println( System.currentTimeMillis() - startTime);
         System.out.println(String.format("'%s' algorithm - nodes evaluated: %s", searcher.getName(), searcher.getNumberOfNodesEvaluated()));
         //Printing Solution Path
         System.out.println("Solution path:");

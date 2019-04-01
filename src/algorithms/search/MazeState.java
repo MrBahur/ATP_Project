@@ -22,12 +22,22 @@ public class MazeState extends AState {
         return maze;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof MazeState))
             return false;
         MazeState other = (MazeState) o;
         return other.currentPosition.equals(currentPosition);
+    }
+
+    @Override
+    public void setVisited(boolean visited) {
+        if (visited == true)
+            maze.getMaze()[currentPosition.getRowIndex()][currentPosition.getColumnIndex()] = 2;
+    }
+
+    @Override
+    public boolean isVisited() {
+        return (maze.getMaze()[currentPosition.getRowIndex()][currentPosition.getColumnIndex()]==2);
     }
 }

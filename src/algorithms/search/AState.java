@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 public abstract class AState{
 
-    @Override
-    public abstract boolean equals(Object o);
-
     private String state;
     private double cost;
     private AState cameFrom;
+    private boolean isVisited;
 
     public AState(String state, double cost, AState cameFrom) {
         this.state = state;
@@ -50,6 +48,12 @@ public abstract class AState{
     public int hashCode() {
         return getState().hashCode();
     }
-}
 
+    @Override
+    public abstract boolean equals(Object o);
+
+    public abstract void setVisited(boolean visited);
+
+    public abstract boolean isVisited();
+}
 

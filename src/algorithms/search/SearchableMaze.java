@@ -76,4 +76,13 @@ public class SearchableMaze implements ISearchable {
 
         return toReturn;
     }
+
+    public Maze getMaze() {
+        return maze;
+    }
+
+    public void setMaze(Maze maze) {
+        this.maze = maze;
+    }
 }
+
