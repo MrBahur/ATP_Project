@@ -17,7 +17,7 @@ public abstract class AState{
         this.cameFrom = cameFrom;
     }
 
-    public String getState() {
+    private String getState() {
         return state;
     }
 
