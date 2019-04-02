@@ -9,10 +9,13 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
     private HashMap<AState, Integer> colour;// not in or 0 = White, 1 = Grey, 2 = Black
     protected Queue<AState> queue;
 
-    public BreadthFirstSearch() {
-        super("Breadth First Search");
-        queue = new LinkedList<>();
+    public BreadthFirstSearch(String name){
+        super(name);
         colour = new HashMap<>();
+    }
+    public BreadthFirstSearch() {
+        this("Breadth First Search");
+        queue = new LinkedList<>();
     }
 
     @Override
@@ -28,6 +31,9 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
         while (!queue.isEmpty()) {
             AState currentState = queue.remove();
             ArrayList<AState> currentStateNeighbours = domain.getAllSuccessors(currentState);
+            if(currentState.hashCode()==goal.hashCode()&&currentState.equals(goal)){
+                return new Solution(currentState);
+            }
             for (AState s : currentStateNeighbours) {
                 boolean isWhite = false;
                 if (!colour.containsKey(s)) {
@@ -39,7 +45,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
                 if (isWhite) {
                     colour.put(s, 1);
                     s.setCameFrom(currentState);
-                    s.setCost(currentState.getCost() + 1);
+                    s.setCost(currentState.getCost() + s.getCost());
                     queue.add(s);
                     setNumOfNodeEvaluated(getNumberOfNodesEvaluated() + 1);
                 }
@@ -47,16 +53,6 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
             colour.remove(currentState);
             colour.put(currentState, 2);
         }
-        if (colour.get(goal) == 0) {
-            return null;
-        } else {// color ==2
-            for (AState s : colour.keySet()) {
-                if (goal.hashCode() == s.hashCode() && goal.equals(s)) {
-                    goal = s;
-                    break;
-                }
-            }
-            return new Solution(goal);
-        }
+        return null;
     }
 }

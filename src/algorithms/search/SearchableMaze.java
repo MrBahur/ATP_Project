@@ -49,28 +49,28 @@ public class SearchableMaze implements ISearchable {
         boolean canMoveRight = inRangeRight && m.getMaze().getMaze()[rowIndex][columnIndex + 1] == 0;
         boolean canMoveLeft = inRangeLeft && m.getMaze().getMaze()[rowIndex][columnIndex - 1] == 0;
         if (canMoveUp) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex), 10, m));
         }
         if (canMoveDown) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex), 10, m));
         }
         if (canMoveRight) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex, columnIndex + 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex, columnIndex + 1), 10, m));
         }
         if (canMoveLeft) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex, columnIndex - 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex, columnIndex - 1), 10, m));
         }
         if ((canMoveUp && inRangeRight || canMoveRight && inRangeUp) && m.getMaze().getMaze()[rowIndex - 1][columnIndex + 1] == 0) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex + 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex + 1), 15, m));
         }
         if ((canMoveUp && inRangeLeft || canMoveLeft && inRangeUp) && m.getMaze().getMaze()[rowIndex - 1][columnIndex - 1] == 0) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex - 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex - 1, columnIndex - 1), 15, m));
         }
         if ((canMoveDown && inRangeRight || canMoveRight && inRangeDown) && m.getMaze().getMaze()[rowIndex + 1][columnIndex + 1] == 0) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex + 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex + 1), 15, m));
         }
         if ((canMoveDown && inRangeLeft || canMoveLeft && inRangeDown) && m.getMaze().getMaze()[rowIndex + 1][columnIndex - 1] == 0) {
-            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex - 1), Double.POSITIVE_INFINITY, m));
+            toReturn.add(new MazeState(maze, new Position(rowIndex + 1, columnIndex - 1), 15, m));
         }
 
 
