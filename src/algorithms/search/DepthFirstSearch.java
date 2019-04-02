@@ -35,6 +35,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
                     stack.push(s);
                     setVisited(nodesStatus, s);
                     s.setCameFrom(currentState);
+                    s.setCost(currentState.getCost()+s.getCost());
                 }
             }
         }
