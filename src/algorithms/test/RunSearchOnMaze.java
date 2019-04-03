@@ -13,8 +13,8 @@ public class RunSearchOnMaze {
 
     public static void main(String[] args) {
         IMazeGenerator mg = new MyMazeGenerator();
-        Maze maze = mg.generate(1000, 1000);
-        //maze.print();
+        Maze maze = mg.generate(30, 30);
+        maze.print();
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         solveProblem(searchableMaze, new BreadthFirstSearch());
         solveProblem(searchableMaze, new DepthFirstSearch());
@@ -23,13 +23,15 @@ public class RunSearchOnMaze {
 
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {
         //Solve a searching problem with a searcher
+        long startTime = System.currentTimeMillis();
         Solution solution = searcher.solve(domain);
+        System.out.println(System.currentTimeMillis() - startTime);
         System.out.println(String.format("'%s' algorithm - nodes evaluated: %s", searcher.getName(), searcher.getNumberOfNodesEvaluated()));
         //Printing Solution Path
         System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
-//        for (int i = 0; i < solutionPath.size(); i++) {
-//            System.out.println(String.format("%s. %s", i, solutionPath.get(i)));
-//        }
+        for (int i = 0; i < solutionPath.size(); i++) {
+            System.out.println(String.format("%s. %s", i, solutionPath.get(i)));
+        }
     }
 }

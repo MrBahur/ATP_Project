@@ -15,6 +15,9 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
     }
 
     public Solution solve(ISearchable domain) {
+        if (domain == null) {
+            throw new NullPointerException();
+        }
 
         AState startState = domain.getStartState();
         AState goalState = domain.getGoalState();
@@ -27,28 +30,19 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
             if (currentState.equals(goalState)) {
                 return new Solution(currentState);
             }
-            setVisited(nodesStatus, currentState);
+            if(!(nodesStatus.containsKey(currentState)))
+                nodesStatus.put(currentState, true);
             allSuccessors = domain.getAllSuccessors(currentState);
 
-            for (AState s : allSuccessors) {
-                if (!(isVisited(nodesStatus, s))) {
-                    stack.push(s);
-                    setVisited(nodesStatus, s);
-                    s.setCameFrom(currentState);
-                    s.setCost(currentState.getCost()+s.getCost());
+            for (AState currentSuccessor : allSuccessors) {
+                if (!(nodesStatus.containsKey(currentSuccessor))) {
+                    stack.push(currentSuccessor);
+                    nodesStatus.put(currentSuccessor, true);
+                    currentSuccessor.setCameFrom(currentState);
+                    currentSuccessor.setCost(currentState.getCost()+currentSuccessor.getCost());
                 }
             }
         }
         return null;
-    }
-
-    private void setVisited(HashMap<AState, Boolean> nodesStatus, AState visitedState) {
-        if (!nodesStatus.containsKey(visitedState)) {
-            nodesStatus.put(visitedState, true);
-        }
-    }
-
-    private boolean isVisited(HashMap<AState, Boolean> nodesStatus, AState stateToCheck) {
-        return nodesStatus.containsKey(stateToCheck);
     }
 }
