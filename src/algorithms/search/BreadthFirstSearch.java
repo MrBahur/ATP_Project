@@ -1,7 +1,5 @@
 package algorithms.search;
 
-import algorithms.mazeGenerators.Position;
-
 import java.util.*;
 
 public class BreadthFirstSearch extends ASearchingAlgorithm {
@@ -9,10 +7,11 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
     private HashMap<AState, Integer> colour;// not in or 0 = White, 1 = Grey, 2 = Black
     protected Queue<AState> queue;
 
-    public BreadthFirstSearch(String name){
+    public BreadthFirstSearch(String name) {
         super(name);
         colour = new HashMap<>();
     }
+
     public BreadthFirstSearch() {
         this("Breadth First Search");
         queue = new LinkedList<>();
@@ -21,7 +20,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
     @Override
     public Solution solve(ISearchable domain) {
         if (domain == null) {
-            throw new NullPointerException();
+            return null;
         }
         AState start = domain.getStartState();
         AState goal = domain.getGoalState();
@@ -31,7 +30,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
         while (!queue.isEmpty()) {
             AState currentState = queue.remove();
             ArrayList<AState> currentStateNeighbours = domain.getAllSuccessors(currentState);
-            if(currentState.hashCode()==goal.hashCode()&&currentState.equals(goal)){
+            if (currentState.hashCode() == goal.hashCode() && currentState.equals(goal)) {
                 return new Solution(currentState);
             }
             for (AState s : currentStateNeighbours) {

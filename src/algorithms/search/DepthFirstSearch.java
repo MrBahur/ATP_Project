@@ -5,18 +5,19 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class DepthFirstSearch extends ASearchingAlgorithm {
-    private HashMap<AState, Boolean> nodesStatus;
+
+    private HashMap<AState, Boolean> visited;
     private Stack<AState> stack;
 
     public DepthFirstSearch() {
         super("Depth First Search");
-        nodesStatus = new HashMap<>(); // false - not yet visited, true - visited
+        visited = new HashMap<>(); // false - not yet visited, true - visited
         stack = new Stack<>();
     }
 
     public Solution solve(ISearchable domain) {
         if (domain == null) {
-            throw new NullPointerException();
+            return null;
         }
 
         AState startState = domain.getStartState();
@@ -27,19 +28,19 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         while (!(stack.empty())) {
             currentState = stack.pop();
             setNumOfNodeEvaluated(getNumberOfNodesEvaluated() + 1);
-            if (currentState.equals(goalState)) {
+            if (currentState.equals(goalState)) { //reached end position
                 return new Solution(currentState);
             }
-            if(!(nodesStatus.containsKey(currentState)))
-                nodesStatus.put(currentState, true);
+            if (!(visited.containsKey(currentState)))
+                visited.put(currentState, true);
             allSuccessors = domain.getAllSuccessors(currentState);
 
-            for (AState currentSuccessor : allSuccessors) {
-                if (!(nodesStatus.containsKey(currentSuccessor))) {
+            for (AState currentSuccessor : allSuccessors) { //Add all successors that are not visited yet
+                if (!(visited.containsKey(currentSuccessor))) {
                     stack.push(currentSuccessor);
-                    nodesStatus.put(currentSuccessor, true);
+                    visited.put(currentSuccessor, true);
                     currentSuccessor.setCameFrom(currentState);
-                    currentSuccessor.setCost(currentState.getCost()+currentSuccessor.getCost());
+                    currentSuccessor.setCost(currentState.getCost() + currentSuccessor.getCost());
                 }
             }
         }
