@@ -29,15 +29,4 @@ public class MazeState extends AState {
         MazeState other = (MazeState) o;
         return other.currentPosition.equals(currentPosition);
     }
-
-    @Override
-    public void setVisited(boolean visited) {
-        if (visited == true)
-            maze.getMaze()[currentPosition.getRowIndex()][currentPosition.getColumnIndex()] = 2;
-    }
-
-    @Override
-    public boolean isVisited() {
-        return (maze.getMaze()[currentPosition.getRowIndex()][currentPosition.getColumnIndex()]==2);
-    }
 }

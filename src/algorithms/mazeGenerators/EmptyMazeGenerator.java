@@ -1,7 +1,12 @@
 package algorithms.mazeGenerators;
 
 public class EmptyMazeGenerator extends AMazeGenerator {
-
+    /**
+     * Generates an all zero's maze
+     * @param rows - the number of rows in the maze
+     * @param columns - - the number of columns in the maze
+     * @return an Empty Maze
+     */
     @Override
     public Maze generate(int rows, int columns) {
         if (rows <= 0 || columns <= 0)

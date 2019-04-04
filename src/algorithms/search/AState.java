@@ -7,7 +7,6 @@ public abstract class AState{
     private String state;
     private double cost;
     private AState cameFrom;
-    private boolean isVisited;
 
     public AState(String state, double cost, AState cameFrom) {
         this.state = state;
@@ -17,10 +16,6 @@ public abstract class AState{
 
     private String getState() {
         return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public double getCost() {
@@ -52,8 +47,5 @@ public abstract class AState{
     @Override
     public abstract boolean equals(Object o);
 
-    public abstract void setVisited(boolean visited);
-
-    public abstract boolean isVisited();
 }
 

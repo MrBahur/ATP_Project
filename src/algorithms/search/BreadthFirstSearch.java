@@ -4,7 +4,7 @@ import java.util.*;
 
 public class BreadthFirstSearch extends ASearchingAlgorithm {
 
-    private HashMap<AState, Integer> colour;// not in or 0 = White, 1 = Grey, 2 = Black
+    private HashMap<AState, Integer> colour;/** not in or 0 = White, 1 = Grey, 2 = Black*/
     protected Queue<AState> queue;
 
     public BreadthFirstSearch(String name) {

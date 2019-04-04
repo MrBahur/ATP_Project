@@ -1,7 +1,5 @@
 package algorithms.search;
 
-import java.util.Queue;
-
 public abstract class ASearchingAlgorithm implements ISearchingAlgorithm {
     private int numOfNodeEvaluated;
 

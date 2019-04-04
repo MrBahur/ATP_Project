@@ -18,26 +18,14 @@ public class Maze {
         return rows;
     }
 
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
     public int getColumns() {
         return columns;
-    }
-
-    public void setColumns(int columns) {
-        this.columns = columns;
     }
 
     public int[][] getMaze() {
         return maze;
     }
 
-    public void setMaze(int[][] maze) {
-        this.maze = maze;
-    }
 
     public Position getStartPosition() {
         return startPosition;
@@ -55,6 +43,9 @@ public class Maze {
         this.goalPosition = goalPosition;
     }
 
+    /**
+     * Prints the maze
+     */
     public void print() {
         for (int i = 0; i < rows; i++) {
             System.out.print("[ ");

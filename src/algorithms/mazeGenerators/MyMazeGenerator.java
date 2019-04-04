@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class MyMazeGenerator extends AMazeGenerator {
+
+    /**
+     * Generates a maze
+     * @param rows - number of rows in the maze
+     * @param cols - number of columns in the maze
+     * @return a generated maze
+     */
     @Override
     public Maze generate(int rows, int cols) {
 
@@ -12,9 +19,9 @@ public class MyMazeGenerator extends AMazeGenerator {
         }
         int chooseAlgorithm = (int) (Math.random() * 2);
         if (chooseAlgorithm == 0) {
-            return dfsAlgorithm(rows, cols);
+            return dfsAlgorithm(rows, cols); // Generates a maze with DFS algorithm
         } else {
-            return primsAlgorithm(rows, cols);
+            return primsAlgorithm(rows, cols); // Generates a maze with Prim's algorithm
         }
 
     }
@@ -54,6 +61,9 @@ public class MyMazeGenerator extends AMazeGenerator {
         }
     }
 
+    /**
+     * Generates a maze with DFS algorithm
+     */
     private Maze dfsAlgorithm(int rows, int cols) {
         Maze maze = new Maze(rows, cols);
         boolean visited[][] = new boolean[rows][cols];//0 - for white, 1 for grey, 2 for black
@@ -90,6 +100,9 @@ public class MyMazeGenerator extends AMazeGenerator {
         return maze;
     }
 
+/**
+ * Generates a maze with Prim's algorithm
+ */
     private Maze primsAlgorithm(int rows, int cols) {
 
         Maze maze = new Maze(rows, cols);
@@ -101,6 +114,9 @@ public class MyMazeGenerator extends AMazeGenerator {
 
     }
 
+    /**
+     * Creates an all walls maze
+     */
     private void initializeMazeArray(Maze maze) {
 
         for (int i = 0; i < maze.getMaze().length; i++) {
@@ -129,7 +145,7 @@ public class MyMazeGenerator extends AMazeGenerator {
         if (pCol + 2 < maze.getMaze()[0].length)
             rightPosition = maze.getMaze()[pRow][pCol + 2];
 
-
+        // 0-openCell, -1-possible neighbors , -2-already opened cell
         if (upPosition != 0 & upPosition != -1 & upPosition != -2) {
             neighbors.add(new Position(pRow - 2, pCol));
             maze.getMaze()[pRow - 2][pCol] = -1;
@@ -146,7 +162,8 @@ public class MyMazeGenerator extends AMazeGenerator {
             neighbors.add(new Position(pRow, pCol + 2));
             maze.getMaze()[pRow][pCol + 2] = -1;
         }
-        while (neighborConnected == false) {
+
+        while (neighborConnected == false) {//Opens one of the positions that is a neighbor of an already opened position
             int randNeighbor = (int) (Math.random() * 4);
             if (randNeighbor == 0) {
                 if (upPosition == 0) {
@@ -172,6 +189,9 @@ public class MyMazeGenerator extends AMazeGenerator {
         }
     }
 
+    /**
+     * Generates the matrix of the maze
+     */
     private void setMaze(Maze maze, ArrayList<Position> neighbors) {
         int randomPositionRow = (int) (Math.random() * (maze.getMaze().length - 1));
         int randomPositionColumn = (int) (Math.random() * (maze.getMaze()[0].length - 1));
@@ -186,6 +206,9 @@ public class MyMazeGenerator extends AMazeGenerator {
         }
     }
 
+    /**
+     * After the maze is generated sets the start and end positions
+     */
     private void setStartAndGoalPositions(Maze maze) {
         int maxRow = 0;
         int maxCol = 0;
