@@ -3,9 +3,10 @@ package algorithms.mazeGenerators;
 public class EmptyMazeGenerator extends AMazeGenerator {
     /**
      * Generates an all zero's maze
-     * @param rows - the number of rows in the maze
+     *
+     * @param rows    - the number of rows in the maze
      * @param columns - - the number of columns in the maze
-     * @return an Empty Maze
+     * @return a Maze without walls
      */
     @Override
     public Maze generate(int rows, int columns) {

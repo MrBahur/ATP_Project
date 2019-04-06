@@ -2,6 +2,13 @@ package algorithms.mazeGenerators;
 
 public class SimpleMazeGenerator extends AMazeGenerator {
 
+    /**
+     * Generates a random maze
+     *
+     * @param rows    the number of rows in the maze
+     * @param columns the number of columns in the maze
+     * @return a random maze with solution (might be more then one sol)
+     */
     @Override
     public Maze generate(int rows, int columns) {
         if (rows <= 0 || columns <= 0)

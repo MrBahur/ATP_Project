@@ -7,6 +7,7 @@ public class MyMazeGenerator extends AMazeGenerator {
 
     /**
      * Generates a maze
+     *
      * @param rows - number of rows in the maze
      * @param cols - number of columns in the maze
      * @return a generated maze
@@ -14,55 +15,24 @@ public class MyMazeGenerator extends AMazeGenerator {
     @Override
     public Maze generate(int rows, int cols) {
 
-        if (rows < 0 || cols < 0) {
+        if (rows <= 0 || cols <= 0) {
             return null;
         }
         int chooseAlgorithm = (int) (Math.random() * 2);
         if (chooseAlgorithm == 0) {
             return dfsAlgorithm(rows, cols); // Generates a maze with DFS algorithm
         } else {
-            return primsAlgorithm(rows, cols); // Generates a maze with Prim's algorithm
+            return primAlgorithm(rows, cols); // Generates a maze with Prim's algorithm
         }
 
-    }
-
-    private Position nextCell(Position currentCell, Position nextCell, int[][] mazeMatrix, boolean[][] visited) {
-        int wallRowIndex = (currentCell.getRowIndex() + nextCell.getRowIndex()) / 2;
-        int wallCallIndex = (currentCell.getColumnIndex() + nextCell.getColumnIndex()) / 2;
-        visited[nextCell.getRowIndex()][nextCell.getColumnIndex()] = true;//mark new cell as visited
-        mazeMatrix[wallRowIndex][wallCallIndex] = 0;//remove wall
-        mazeMatrix[nextCell.getRowIndex()][nextCell.getColumnIndex()] = 0;
-        return nextCell;
-    }
-
-    private ArrayList<Position> getNotVisitedNeighbours(boolean[][] visited, Position cell) {
-        ArrayList<Position> p = new ArrayList<>();
-        int rowIndex = cell.getRowIndex();
-        int colIndex = cell.getColumnIndex();
-        int rows = visited.length;
-        int cols = visited[0].length;
-        if (rowIndex + 2 < rows && !visited[rowIndex + 2][colIndex]) {//UP
-            p.add(new Position(rowIndex + 2, colIndex));
-        }
-        if (colIndex + 2 < cols && !visited[rowIndex][colIndex + 2]) {//RIGHT
-            p.add(new Position(rowIndex, colIndex + 2));
-        }
-        if (rowIndex - 2 >= 0 && !visited[rowIndex - 2][colIndex]) {//DOWN
-            p.add(new Position(rowIndex - 2, colIndex));
-        }
-        if (colIndex - 2 >= 0 && !visited[rowIndex][colIndex - 2]) {//LEFT
-            p.add(new Position(rowIndex, colIndex - 2));
-        }
-
-        if (p.size() == 0) {
-            return null;
-        } else {
-            return p;
-        }
     }
 
     /**
-     * Generates a maze with DFS algorithm
+     * generate random maze using DFS based algorithm
+     *
+     * @param rows the number of rows in the maze
+     * @param cols the number of columns in the maze
+     * @return a maze
      */
     private Maze dfsAlgorithm(int rows, int cols) {
         Maze maze = new Maze(rows, cols);
@@ -100,10 +70,14 @@ public class MyMazeGenerator extends AMazeGenerator {
         return maze;
     }
 
-/**
- * Generates a maze with Prim's algorithm
- */
-    private Maze primsAlgorithm(int rows, int cols) {
+    /**
+     * generate random maze using Prim based algorithm
+     *
+     * @param rows the number of rows in the maze
+     * @param cols the number of columns in the maze
+     * @return a maze
+     */
+    private Maze primAlgorithm(int rows, int cols) {
 
         Maze maze = new Maze(rows, cols);
         ArrayList<Position> neighbors = new ArrayList<>();
@@ -115,7 +89,62 @@ public class MyMazeGenerator extends AMazeGenerator {
     }
 
     /**
-     * Creates an all walls maze
+     * helper function for Prim algorithm that use to update nextCell and the wall in the bool matrix
+     * and the maze matrix
+     *
+     * @param currentCell the cell we are in right now
+     * @param nextCell    the next cell
+     * @param mazeMatrix  the maze matrix
+     * @param visited     the boolean visited matrix
+     * @return the next Cell
+     */
+    private Position nextCell(Position currentCell, Position nextCell, int[][] mazeMatrix, boolean[][] visited) {
+        int wallRowIndex = (currentCell.getRowIndex() + nextCell.getRowIndex()) / 2;
+        int wallCallIndex = (currentCell.getColumnIndex() + nextCell.getColumnIndex()) / 2;
+        visited[nextCell.getRowIndex()][nextCell.getColumnIndex()] = true;//mark new cell as visited
+        mazeMatrix[wallRowIndex][wallCallIndex] = 0;//remove wall
+        mazeMatrix[nextCell.getRowIndex()][nextCell.getColumnIndex()] = 0;
+        return nextCell;
+    }
+
+    /**
+     * return array list of all the not visited neighbours of a cell
+     *
+     * @param visited the visited matrix
+     * @param cell    the current cell
+     * @return array list of all the non visited neighbours of a cell, null if none exist
+     */
+    private ArrayList<Position> getNotVisitedNeighbours(boolean[][] visited, Position cell) {
+        ArrayList<Position> p = new ArrayList<>();
+        int rowIndex = cell.getRowIndex();
+        int colIndex = cell.getColumnIndex();
+        int rows = visited.length;
+        int cols = visited[0].length;
+        if (rowIndex + 2 < rows && !visited[rowIndex + 2][colIndex]) {//UP
+            p.add(new Position(rowIndex + 2, colIndex));
+        }
+        if (colIndex + 2 < cols && !visited[rowIndex][colIndex + 2]) {//RIGHT
+            p.add(new Position(rowIndex, colIndex + 2));
+        }
+        if (rowIndex - 2 >= 0 && !visited[rowIndex - 2][colIndex]) {//DOWN
+            p.add(new Position(rowIndex - 2, colIndex));
+        }
+        if (colIndex - 2 >= 0 && !visited[rowIndex][colIndex - 2]) {//LEFT
+            p.add(new Position(rowIndex, colIndex - 2));
+        }
+
+        if (p.size() == 0) {
+            return null;
+        } else {
+            return p;
+        }
+    }
+
+
+    /**
+     * initial maze to be an whole wall maze
+     *
+     * @param maze the maze to initial
      */
     private void initializeMazeArray(Maze maze) {
 
@@ -126,6 +155,14 @@ public class MyMazeGenerator extends AMazeGenerator {
         }
     }
 
+    /**
+     * adding a cell to maze
+     *
+     * @param maze              the maze we want to add to
+     * @param p                 the Position of the cell we want to add to the maze
+     * @param neighbors         list of all this cell neighbours
+     * @param neighborConnected flag that says if the neighbour is connected
+     */
     private void addACellToMaze(Maze maze, Position p, ArrayList<Position> neighbors, boolean neighborConnected) {
 
         int pRow = p.getRowIndex();
@@ -191,6 +228,9 @@ public class MyMazeGenerator extends AMazeGenerator {
 
     /**
      * Generates the matrix of the maze
+     *
+     * @param maze      the maze to set
+     * @param neighbors list of all the neighbours
      */
     private void setMaze(Maze maze, ArrayList<Position> neighbors) {
         int randomPositionRow = (int) (Math.random() * (maze.getMaze().length - 1));
@@ -207,7 +247,9 @@ public class MyMazeGenerator extends AMazeGenerator {
     }
 
     /**
-     * After the maze is generated sets the start and end positions
+     * setting the goal and start position for the maze
+     *
+     * @param maze the maze
      */
     private void setStartAndGoalPositions(Maze maze) {
         int maxRow = 0;
