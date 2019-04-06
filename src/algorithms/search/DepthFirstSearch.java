@@ -9,12 +9,20 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
     private HashMap<AState, Boolean> visited;
     private Stack<AState> stack;
 
+    //region Constructors
     public DepthFirstSearch() {
         super("Depth First Search");
         visited = new HashMap<>(); // false - not yet visited, true - visited
         stack = new Stack<>();
     }
+    //endregion
 
+    /**
+     * The algorithm
+     *
+     * @param domain the problem
+     * @return the solution
+     */
     public Solution solve(ISearchable domain) {
         if (domain == null) {
             return null;
