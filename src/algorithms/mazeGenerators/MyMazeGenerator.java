@@ -16,7 +16,9 @@ public class MyMazeGenerator extends AMazeGenerator {
     public Maze generate(int rows, int cols) {
 
         if (rows <= 0 || cols <= 0) {
-            return null;
+            rows = 10;
+            cols = 10;
+            System.out.println("wrong parameters sent to generate so a maze in size 10X10 created");
         }
         int chooseAlgorithm = (int) (Math.random() * 2);
         if (chooseAlgorithm == 0) {
