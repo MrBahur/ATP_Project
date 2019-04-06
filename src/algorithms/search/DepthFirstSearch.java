@@ -25,6 +25,7 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
      */
     public Solution solve(ISearchable domain) {
         if (domain == null) {
+            System.out.println("Wrong input");
             return null;
         }
         AState startState = domain.getStartState();
