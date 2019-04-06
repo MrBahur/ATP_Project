@@ -13,7 +13,7 @@ public class Solution {
 
     public ArrayList<AState> getSolutionPath() {
         if (lastState == null) {
-            return null; //no solution to the maze
+            return new ArrayList<AState>(); //no solution to the maze, empty array list
         } else { //recursive finding the solution using linkedList
             LinkedList<AState> listOfState = new LinkedList<>();
             AState tmp = lastState;

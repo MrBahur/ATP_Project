@@ -27,7 +27,6 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         if (domain == null) {
             return null;
         }
-
         AState startState = domain.getStartState();
         AState goalState = domain.getGoalState();
         AState currentState;
