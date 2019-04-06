@@ -77,3 +77,4 @@ public class SearchableMaze implements ISearchable {
         return toReturn;
     }
 }
+

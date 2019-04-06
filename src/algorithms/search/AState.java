@@ -2,27 +2,29 @@ package algorithms.search;
 
 import java.util.ArrayList;
 
-public abstract class AState{
 
-    @Override
-    public abstract boolean equals(Object o);
+public abstract class AState {
 
     private String state;
     private double cost;
     private AState cameFrom;
 
+    /**
+     * Constructor for AState
+     *
+     * @param state    representation of the state as a string
+     * @param cost     the cost to get to this state
+     * @param cameFrom the previous state that got us to this state
+     */
     public AState(String state, double cost, AState cameFrom) {
         this.state = state;
         this.cost = cost;
         this.cameFrom = cameFrom;
     }
 
+    //region Getters
     private String getState() {
         return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public double getCost() {
@@ -36,20 +38,42 @@ public abstract class AState{
     public AState getCameFrom() {
         return cameFrom;
     }
+    //endregion
 
+    //region Setters
     public void setCameFrom(AState cameFrom) {
         this.cameFrom = cameFrom;
     }
+    //endregion
 
+    /**
+     * Overriding toString for AState
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getState();
     }
 
+    /**
+     * Overriding hashCode for Position
+     *
+     * @return the State hashCode
+     */
     @Override
     public int hashCode() {
         return getState().hashCode();
     }
-}
 
+    /**
+     * Overriding equals for AState
+     *
+     * @param o another State of the same searching problem
+     * @return true if the state represent the same state in the search problem
+     */
+    @Override
+    public abstract boolean equals(Object o);
+
+}
 

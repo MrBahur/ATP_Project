@@ -5,17 +5,28 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class DepthFirstSearch extends ASearchingAlgorithm {
-    private HashMap<AState, Boolean> nodesStatus;
+
+    private HashMap<AState, Boolean> visited;
     private Stack<AState> stack;
 
+    //region Constructors
     public DepthFirstSearch() {
         super("Depth First Search");
-        nodesStatus = new HashMap<>(); // false - not yet visited, true - visited
+        visited = new HashMap<>(); // false - not yet visited, true - visited
         stack = new Stack<>();
     }
+    //endregion
 
+    /**
+     * The algorithm
+     *
+     * @param domain the problem
+     * @return the solution
+     */
     public Solution solve(ISearchable domain) {
-
+        if (domain == null) {
+            return null;
+        }
         AState startState = domain.getStartState();
         AState goalState = domain.getGoalState();
         AState currentState;
@@ -24,31 +35,22 @@ public class DepthFirstSearch extends ASearchingAlgorithm {
         while (!(stack.empty())) {
             currentState = stack.pop();
             setNumOfNodeEvaluated(getNumberOfNodesEvaluated() + 1);
-            if (currentState.equals(goalState)) {
+            if (currentState.equals(goalState)) { //reached end position
                 return new Solution(currentState);
             }
-            setVisited(nodesStatus, currentState);
+            if (!(visited.containsKey(currentState)))
+                visited.put(currentState, true);
             allSuccessors = domain.getAllSuccessors(currentState);
 
-            for (AState s : allSuccessors) {
-                if (!(isVisited(nodesStatus, s))) {
-                    stack.push(s);
-                    setVisited(nodesStatus, s);
-                    s.setCameFrom(currentState);
-                    s.setCost(currentState.getCost()+s.getCost());
+            for (AState currentSuccessor : allSuccessors) { //Add all successors that are not visited yet
+                if (!(visited.containsKey(currentSuccessor))) {
+                    stack.push(currentSuccessor);
+                    visited.put(currentSuccessor, true);
+                    currentSuccessor.setCameFrom(currentState);
+                    currentSuccessor.setCost(currentState.getCost() + currentSuccessor.getCost());
                 }
             }
         }
         return null;
-    }
-
-    private void setVisited(HashMap<AState, Boolean> nodesStatus, AState visitedState) {
-        if (!nodesStatus.containsKey(visitedState)) {
-            nodesStatus.put(visitedState, true);
-        }
-    }
-
-    private boolean isVisited(HashMap<AState, Boolean> nodesStatus, AState stateToCheck) {
-        return nodesStatus.containsKey(stateToCheck);
     }
 }
