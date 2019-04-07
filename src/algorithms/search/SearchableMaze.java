@@ -30,12 +30,14 @@ public class SearchableMaze implements ISearchable {
     @Override
     public ArrayList<AState> getAllSuccessors(AState s) {
         if (!(s instanceof MazeState)) {
-            throw new IllegalArgumentException("Expected Maze state");
+            System.out.println("Expected Maze state");
+            return  null;
         }
 
         MazeState m = (MazeState) s;
         if (this.maze != m.getMaze()) {
-            throw new IllegalArgumentException("this is a maze state but not of this maze");
+            System.out.println("this is a maze state but not of this maze");
+            return  null;
         }
         int rowIndex = m.getCurrentPosition().getRowIndex();
         int columnIndex = m.getCurrentPosition().getColumnIndex();

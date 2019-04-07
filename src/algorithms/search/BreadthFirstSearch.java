@@ -28,6 +28,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm {
     @Override
     public Solution solve(ISearchable domain) {
         if (domain == null) {
+            System.out.println("Wrong input");
             return null;
         }
         AState start = domain.getStartState();
