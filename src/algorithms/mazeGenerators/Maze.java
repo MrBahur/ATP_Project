@@ -1,5 +1,7 @@
 package algorithms.mazeGenerators;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 public class Maze {
 
     private int rows;
@@ -18,6 +20,14 @@ public class Maze {
         this.rows = rows;
         this.columns = columns;
         maze = new int[rows][columns];
+    }
+
+    //TODO implement:
+    /**
+     * Constructor for maze that build a maze from non compassed byte array
+     * @param b the non compressed byte array
+     */
+    public Maze(byte[] b) {
     }
 
     //region Getters
@@ -69,5 +79,14 @@ public class Maze {
             }
             System.out.println("]");
         }
+    }
+
+    //TODO implement;
+    /**
+     * function that represent the maze as an byte array (not compressed)
+     * @return the maze details, not compressed.
+     */
+    public byte[] toByteArray(){
+        return null;
     }
 }
