@@ -21,13 +21,13 @@ public class RunCompressDecompressMaze {
             OutputStream out = new MyCompressorOutputStream(new
                     FileOutputStream(mazeFileName));
            byte[] b = maze.toByteArray();
-            for (byte b1:b
-                 ) {
-                System.out.println(b1);
-            }
+//            for (byte b1:b
+//                 ) {
+//                System.out.println(b1);
+//            }
             out.write(maze.toByteArray());
-//            out.flush();
-//            out.close();
+            out.flush();
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

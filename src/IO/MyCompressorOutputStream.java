@@ -11,11 +11,7 @@ public class MyCompressorOutputStream extends OutputStream {
     private OutputStream out;
 
     public MyCompressorOutputStream(OutputStream out) {
-        //////////////////////cancel this - just for test//////////////////////////////////
         this.out = out;
-    }
-
-    public MyCompressorOutputStream() {
     }
 
     //TODO implement and document
@@ -28,45 +24,64 @@ public class MyCompressorOutputStream extends OutputStream {
     @Override
     public void write(byte[] b) {
 
-        ArrayList<Pair<ArrayList<Byte>, Integer>> dictionary = new ArrayList<>();
-        ArrayList<Pair<Integer, Byte>> resultPairs = new ArrayList<>();
-        dictionary.add(new Pair<>(null, 0));
-        int i = 0;
-        ArrayList<Byte> newPattern;
-        int previousPatternIndex;
+        if (b == null) {
+            throw new NullPointerException();
+        }
+        else {
 
-        while (i < b.length) {
+            ArrayList<Pair<ArrayList<Byte>, Integer>> dictionary = new ArrayList<>();
+            //Pairs of:
+            //Patterns - every new pattern is being added to the dictionary
+            //Indexes - of the longest pattern which is contained in the new pattern. - if there is no
+            //such pattern the index equals to 0
+            ArrayList<Pair<Integer, Byte>> resultPairs = new ArrayList<>();
+            //The final result  - pairs of the previous pattern index and the additional byte which
+            //together create a new pattern
+            dictionary.add(new Pair<>(null, 0)); //The first pattern (default)
+            int i = 0;
+            ArrayList<Byte> newPattern;
+            int previousPatternIndex;
 
-            previousPatternIndex=0;
-            newPattern = new ArrayList<>();
-            newPattern.add(b[i]);
+            while (i < b.length) {
 
-            while (indexOf(dictionary,newPattern) != -1) { //The pattern is in the list
+                previousPatternIndex = 0;
+                newPattern = new ArrayList<>();
+                newPattern.add(b[i]);
 
-                previousPatternIndex = indexOf(dictionary,newPattern);
-                if (i < b.length - 1) {
-                    i++;
-                    newPattern.add(b[i]);
-                } else {
-                    break;
+                while (indexOf(dictionary, newPattern) != -1) { //The pattern is in the list
+
+                    previousPatternIndex = indexOf(dictionary, newPattern);
+                    if (i < b.length - 1) { //Add the next byte to the new pattern
+                        i++;
+                        newPattern.add(b[i]);
+                    } else {
+                        //If all the bytes were inserted to the dictionary the last pattern
+                        // is being added to the dictionary with a default previousPatternIndex
+                        previousPatternIndex = 0;
+                        break;
+                    }
                 }
+
+                Pair newPair = new Pair(newPattern, previousPatternIndex);
+                dictionary.add(newPair);
+                Pair newResultPair = new Pair(previousPatternIndex, b[i]);
+                resultPairs.add(newResultPair);
+                i++;
             }
 
-            Pair newPair = new Pair(newPattern, previousPatternIndex);
-            dictionary.add(newPair);
-            Pair newResultPair = new Pair(previousPatternIndex, b[i]);
-            resultPairs.add(newResultPair);
-            i++;
+            try { //outputs the result
+                for (i = 0; i < resultPairs.size(); i++) {
+
+                    Pair res = resultPairs.get(i);
+                    System.out.println(res.toString());
+                    out.write(res.toString().getBytes());
+                    out.write(" ".getBytes());
+                }
+            }
+            catch(IOException e){
+                e.getMessage();
+            }
         }
-
-
-
-        for (i = 0; i < resultPairs.size(); i++) {
-            Pair res = resultPairs.get(i);
-            System.out.println(res.toString());
-           // System.out.println(res.getKey() + " , " + res.getValue());
-        }
-
         return;
     }
 
@@ -89,6 +104,3 @@ public class MyCompressorOutputStream extends OutputStream {
         return -1;
     }
 }
- //   MyCompressorOutputStream test = new MyCompressorOutputStream();
-//        byte[] b = {0,0,0,1,0,1,0,1,0,1,0,1,1,1,1,1};
-//        test.write(b);
