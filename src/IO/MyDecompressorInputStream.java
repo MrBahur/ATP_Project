@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class MyDecompressorInputStream extends InputStream{
+
     private InputStream in;
 
     public MyDecompressorInputStream(InputStream in) {
@@ -14,4 +15,13 @@ public class MyDecompressorInputStream extends InputStream{
     public int read() throws IOException {
         return 0;
     }
+//
+//    public byte[] read() throws IOException {
+//
+//        byte[] data =  in.read();
+//
+//
+//
+//    }
+
 }
