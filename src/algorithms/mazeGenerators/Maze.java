@@ -20,8 +20,6 @@ public class Maze {
         maze = new int[rows][columns];
     }
 
-    //TODO implement:
-
     /**
      * Constructor for maze that build a maze from non compassed byte array
      *
@@ -36,11 +34,11 @@ public class Maze {
         this.maze = new int[rows][columns];
         int start = 6 * sizeOfData;
         for (int i = start + 1, j = 0, k = 0; i < b.length; i++) {
-            fillNextEightNumbers(b[i] & 0xFF, i - start - 1);
+            fillNextEightCells(b[i] & 0xFF, i - start - 1);
         }
     }
 
-    private void fillNextEightNumbers(int data, int index) {
+    private void fillNextEightCells(int data, int index) {
         for (int i = 7; i >= 0; i--) {
             int row = getRowIndex(index*8 + i);
             int col = getColsIndex(index*8 + i);
@@ -121,8 +119,6 @@ public class Maze {
             System.out.println("]");
         }
     }
-
-    //TODO implement;
 
     /**
      * function that represent the maze as an byte array (not compressed)
