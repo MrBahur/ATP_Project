@@ -1,4 +1,4 @@
 package Server;
 
-public class ServerStrategyGenerateMaze {
+public class ServerStrategyGenerateMaze implements IServerStrategy{
 }

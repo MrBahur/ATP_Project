@@ -1,4 +1,4 @@
 package Server;
 
-public class ServerStrategySolveSearchProblem {
+public class ServerStrategySolveSearchProblem implements IServerStrategy{
 }

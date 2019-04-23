@@ -45,7 +45,7 @@ public class MyCompressorOutputStream extends OutputStream {
         int size = (int) Math.ceil(Math.log(x) / Math.log(256));
         int maxIndexSize = sizeOfKey;// 3 for huge mazes (bigger then 1400 X 1400, 2 for smaller)
         size = Math.max(size, maxIndexSize);
-        if (size == maxIndexSize+1) {
+        if (size >= maxIndexSize+1) {
             System.out.println("error");
         }
         int[] toReturn = new int[size];
