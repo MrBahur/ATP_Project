@@ -47,6 +47,7 @@ public class Maze {
             fillNextEightCells(b[i] & 0xFF, i - start); // b[i] & 0xFF stands for changing from signed
             // byte to unsigned int.
         }
+
     }
 
     /**
@@ -59,9 +60,14 @@ public class Maze {
     private void fillNextEightCells(int data, int index) {
         for (int i = 7; i >= 0; i--) {
             int row = getRowIndex(index * 8 + i); // the correct row index
+            if(row==rows)
+                continue;
             int col = getColsIndex(index * 8 + i); // the correct cols index
             maze[row][col] = data % 2;
             data /= 2;
+        }
+        if(data==1){
+            maze[rows-1][columns-1]=1;
         }
     }
 
