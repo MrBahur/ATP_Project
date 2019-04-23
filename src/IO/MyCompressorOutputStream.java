@@ -1,108 +1,87 @@
 package IO;
 
-import javafx.util.Pair;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashMap;
 
 public class MyCompressorOutputStream extends OutputStream {
-
     private OutputStream out;
+    private HashMap<String, Integer> dictionary;
+    private ArrayList<String> patterns;
+    private String currentString;
 
     public MyCompressorOutputStream(OutputStream out) {
         this.out = out;
+        dictionary = new HashMap<>();
+        patterns = new ArrayList<>();
+        dictionary.put("",0);
+        patterns.add("");
+        currentString = "";
     }
 
     //TODO implement and document
     @Override
     public void write(int b) throws IOException {
-
-    }
-
-    @Override
-/**
- * Compresses the given array and writes the compressed array into this output stream
- */
-    public void write(byte[] b) throws IOException{
-
-        if (b == null) {
-            throw new NullPointerException();
-        }
-        else {
-
-            HashMap<ArrayList<Byte>,Pair<Integer,Integer>> dictionary = new HashMap();
-            //pattern, pair<index,previous index>
-            //Patterns - every new pattern is being added to the dictionary
-            //
-            //Indexes - of the longest pattern which is contained in the new pattern. - if there is no
-            //such pattern the index equals to 0
-            ArrayList<Pair<Integer, Byte>> resultPairs = new ArrayList<>();
-            //The final result  - pairs of the previous pattern index and the additional byte which
-            //together create a new pattern
-            dictionary.put(null, new Pair(0, 0)); //The first pattern (default)
-            int i = 0;
-            ArrayList<Byte> newPattern;
-            int previousPatternIndex;
-            int currentPatternIndex = 1;
-
-            while (i < b.length) {
-
-                previousPatternIndex = 0;
-                newPattern = new ArrayList<>();
-                newPattern.add(b[i]);
-
-                while (indexOf(dictionary, newPattern) != -1) { //The pattern is in the list
-
-                    previousPatternIndex = indexOf(dictionary, newPattern);
-                    if (i < b.length - 1) { //Add the next byte to the new pattern
-                        i++;
-                        newPattern.add(b[i]);
-                    } else {
-                        //If all the bytes were inserted to the dictionary the last pattern
-                        // is being added to the dictionary with a default previousPatternIndex
-                        previousPatternIndex = 0;
-                        break;
-                    }
-                }
-
-                dictionary.put(newPattern,new Pair<>(currentPatternIndex, previousPatternIndex));
-                currentPatternIndex++;
-                Pair newResultPair = new Pair(previousPatternIndex, b[i]);
-                resultPairs.add(newResultPair);
-                i++;
+        if (dictionary.containsKey(currentString + (char) b)) {
+            currentString += (char) b;
+        } else {
+            patterns.add(currentString + (char) b);
+            dictionary.put(currentString + (char) b, patterns.size());
+            int x = dictionary.get(currentString);
+            int[] indexes = splitToBytes(x);
+            for (int i = 0; i < indexes.length; i++) {
+                out.write(indexes[i]);
             }
-
-                for (i = 0; i < resultPairs.size(); i++) {
-
-                    Pair res = resultPairs.get(i);
-                    byte keyByte = ((Integer)res.getKey()).byteValue();
-                    out.write(keyByte);
-                    byte valueByte = (byte)res.getValue();
-                    out.write(valueByte);
-                }
+            out.write(b);//byte
+            currentString = "";
         }
-        return;
     }
 
-    /**
-     * checks if the given pattern exist in the given dictionary
-     * @param dictionary where the pattern is being searched
-     * @param pattern the checked pattern
-     * @return if the pattern exists in the dictionary - returns its index in the dictionary.
-     * else, returns -1
-     */
-    public int indexOf(HashMap<ArrayList<Byte>, Pair<Integer, Integer>> dictionary, ArrayList<Byte> pattern) {
-
-
-        if (dictionary.get(pattern) == null) return -1;
-
-        return dictionary.get(pattern).getKey();
+    private int[] splitToBytes(int x) {
+        int size = (int) Math.ceil(Math.log(x) / Math.log(256));
+        int maxIndexSize = 3;// 3 for huge mazes (bigger then 1400 X 1400, 2 for smaller)
+        size = Math.max(size,maxIndexSize);
+        if(size ==4){
+            System.out.println("error");
+        }
+        int[] toReturn = new int[size];
+        for (int i = size-1; i >= 0; i--) {
+            byte y = 0;
+            for (int j = 0 ; j < 8 && x!=0; j++) { // need to test it
+                y *= 2;
+                y += x % 2;
+                x = x / 2;
+            }
+            toReturn[i] = y & 0xFF;
+        }
+        return toReturn;
     }
 
-    public char[] convertToChars(Integer intToConvert, Byte byteToConvert){
+    //TODO implement and document
+    @Override
+    public void write(byte[] byteArray) {
+        for (byte b : byteArray) {
+            try {
+                write(b & 0xFF);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (currentString.length() > 0) {
+            try {
+                char x = currentString.charAt(currentString.length()-1);
+                currentString = currentString.substring(0,currentString.length()-1);
+                int[] indexes = splitToBytes(dictionary.get(currentString));
+                out.write(indexes[0]);
+                out.write(indexes[1]);
+                out.write((int)x);
 
-        return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 }
