@@ -96,7 +96,7 @@ public class Maze {
     private int retrieveDataFromByteArray(byte[] byteArray, int index) {
         int sizeOfData = byteArray[0];
         int data = 0;
-        for (int i = (index + 1) * sizeOfData; i > index * sizeOfData; i--) {
+        for (int i = (index ) * sizeOfData+1; i <= (index + 1) * sizeOfData; i++) {
             int b = byteArray[i] & 0xFF;
             // byteArray[i] & 0xFF stands for changing from signed byte to unsigned int
             data *= 256;

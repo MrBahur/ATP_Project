@@ -11,6 +11,7 @@ public class MyCompressorOutputStream extends OutputStream {
     private HashMap<String, Integer> dictionary;
     private ArrayList<String> patterns;
     private String currentString;
+    private int sizeOfKey;
 
     public MyCompressorOutputStream(OutputStream out) {
         this.out = out;
@@ -19,6 +20,7 @@ public class MyCompressorOutputStream extends OutputStream {
         dictionary.put("", 0);
         patterns.add("");
         currentString = "";
+        sizeOfKey = 0;
     }
 
     //TODO implement and document
@@ -41,14 +43,13 @@ public class MyCompressorOutputStream extends OutputStream {
 
     private int[] splitToBytes(int x) {
         int size = (int) Math.ceil(Math.log(x) / Math.log(256));
-        int maxIndexSize = 2;// 3 for huge mazes (bigger then 1400 X 1400, 2 for smaller)
+        int maxIndexSize = sizeOfKey;// 3 for huge mazes (bigger then 1400 X 1400, 2 for smaller)
         size = Math.max(size, maxIndexSize);
         if (size == maxIndexSize+1) {
             System.out.println("error");
         }
         int[] toReturn = new int[size];
         for (int i = size - 1; i >= 0; i--) {
-
             int [] bitArray = new int[8];
             for (int j = 7; j >=0 ; j--) {
                 bitArray[j] = x%2;
@@ -67,6 +68,20 @@ public class MyCompressorOutputStream extends OutputStream {
     //TODO implement and document
     @Override
     public void write(byte[] byteArray) {
+        if(byteArray.length<=457){
+            sizeOfKey = 1;
+        }
+        else if(byteArray.length<=262826){
+            sizeOfKey = 2;
+        }
+        else {
+            sizeOfKey = 3;
+        }
+        try {
+            out.write(sizeOfKey); //writing the size of the key in bytes to the file
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (byte b : byteArray) {
             try {
                 write(b & 0xFF);
@@ -79,8 +94,9 @@ public class MyCompressorOutputStream extends OutputStream {
                 char x = currentString.charAt(currentString.length() - 1);
                 currentString = currentString.substring(0, currentString.length() - 1);
                 int[] indexes = splitToBytes(dictionary.get(currentString));
-                out.write(indexes[0]);
-                out.write(indexes[1]);
+                for (int i = 0; i <indexes.length ; i++) {
+                    out.write(indexes[i]);
+                }
                 out.write((int) x);
 
             } catch (IOException e) {
