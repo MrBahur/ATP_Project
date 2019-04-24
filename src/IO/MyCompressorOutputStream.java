@@ -22,6 +22,13 @@ public class MyCompressorOutputStream extends OutputStream {
         out.write(((Integer) b).byteValue());
     }
 
+    /**
+     * Sets an Integer to be written to the output stream
+     * @param b The original value
+     * @param numOfBytesPerIndex the number of bytes needed in order to write a representation
+     *                           of the value
+     * @throws IOException
+     */
     public void write(int b, int numOfBytesPerIndex) throws IOException {
 
         if (numOfBytesPerIndex == 1) {
@@ -38,40 +45,6 @@ public class MyCompressorOutputStream extends OutputStream {
 
         }
     }
-
-//    @Override
-//    public void write(int b) throws IOException {
-//
-//        int rest = b;
-//        Integer char1 = 0, char2 = 0;
-//        int[] binaryRepresentation = new int[16];
-//        byte[] result = new byte[2];
-//
-//        for (int i = 15; rest > 0; i--) {
-//            if ((Math.pow(2, i)) <= rest) {
-//                binaryRepresentation[i] = 1;
-//                rest -= (Math.pow(2, i));
-//            }
-//        }
-//        int j = 0;
-//        for (; j < 8; j++) {
-//            if (binaryRepresentation[j] == 1) {
-//                char1 = +(int) (Math.pow(2, j));
-//            }
-//        }
-//        for (; j < 16; j++) {
-//            if (binaryRepresentation[j] == 1) {
-//                char2 = +(int) (Math.pow(2, j - 8));
-//            }
-//        }
-//        byte c1 = char1.byteValue();
-//        result[0] = c1;
-//        byte c2 = char2.byteValue();
-//        result[1] = c2;
-//
-//        out.write(result[0]);
-//        out.write(result[1]);
-//    }
 
     @Override
 /**
@@ -119,15 +92,16 @@ public class MyCompressorOutputStream extends OutputStream {
                 }
 
                 dictionary.put(newPattern, new Pair<>(currentPatternIndex, previousPatternIndex));
+
                 currentPatternIndex++;
-                if (currentPatternIndex > 255) {
+                if (currentPatternIndex > 255) {//For mazes of about 100*100 or bigger
                     numOfBytesForIndex = 2;
                 }
-                if (currentPatternIndex > 65025) {
+                if (currentPatternIndex > 65025) {//For mazes of about 1300*1300 or bigger
                     numOfBytesForIndex = 3;
                 }
-                Pair newResultPair = new Pair(previousPatternIndex, b[i]);
 
+                Pair newResultPair = new Pair(previousPatternIndex, b[i]);
 
                 resultPairs.add(newResultPair);
                 i++;

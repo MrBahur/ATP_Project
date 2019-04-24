@@ -21,6 +21,12 @@ public class MyDecompressorInputStream extends InputStream {
         return 0;
     }
 
+    /**
+     * Sets a byte[] using the information read from the input Stream
+     * @param b The byte array to be set
+     * @return
+     * @throws IOException
+     */
     @Override
     public int read(byte[] b) throws IOException {
 
@@ -31,24 +37,13 @@ public class MyDecompressorInputStream extends InputStream {
 
         while (in.available() != 0) {
 
-            Integer previousIndex;
-            if (currentIndex == 1) {
+            if (currentIndex == 1) { //The first byte from the inputStream indicates the size of each index
                 numOfBytesPerIndex = in.read();
             }
 
-            if (numOfBytesPerIndex == 1) {
-                previousIndex = in.read();
-            } else if (numOfBytesPerIndex == 2) {
-                int mul = in.read();
-                int remainder = in.read();
-                previousIndex = (255 * mul + remainder);
-            } else { //numOfBytesPerIndex==3
-                int firstMultiplication = in.read();
-                int secondMultiplication = in.read();
-                int remainder = in.read();
-                previousIndex = ((65025 * firstMultiplication) + (255 * secondMultiplication) + remainder);
-            }
+            Integer previousIndex = previousIndex(numOfBytesPerIndex);
             Integer extraByte = in.read();
+
 
             ArrayList<Byte> newPattern = new ArrayList<>();
 
@@ -66,6 +61,44 @@ public class MyDecompressorInputStream extends InputStream {
             currentIndex++;
         }
 
+        setBytesArray(dictionary,b,currentIndex);
+
+        return 0;
+    }
+
+    /**
+     * Calculates the value of the index using the information read from the input stream
+     * @param numOfBytesPerIndex Indication of how many bytes are needed in order to get the value of the index
+     * @return the value of the index
+     * @throws IOException
+     */
+    public Integer previousIndex(Integer numOfBytesPerIndex) throws IOException{
+
+        Integer previousIndex;
+        if (numOfBytesPerIndex == 1) {
+            previousIndex = in.read();
+        } else if (numOfBytesPerIndex == 2) {
+            int mul = in.read();
+            int remainder = in.read();
+            previousIndex = (255 * mul + remainder);
+        } else { //numOfBytesPerIndex==3
+            int firstMultiplication = in.read();
+            int secondMultiplication = in.read();
+            int remainder = in.read();
+            previousIndex = ((65025 * firstMultiplication) + (255 * secondMultiplication) + remainder);
+        }
+        return previousIndex;
+    }
+
+    /**
+     * Sets the bytes Array
+     * @param dictionary Where all the patterns are kept (the key indicates their turn to be added to the final byte[])
+     * @param b The Array to be set
+     * @param currentIndex The number of patterns that are kept in the dictionary
+     *                    (which is equal to the number of bytes in b)
+     */
+    public void setBytesArray(Map<Integer, ArrayList<Byte>> dictionary, byte[] b, int currentIndex){
+
         int i = 0;
         for (int j = 1; j < currentIndex; j++) {
             for (int k = 0; k < dictionary.get(j).size(); k++) {
@@ -76,31 +109,6 @@ public class MyDecompressorInputStream extends InputStream {
 
             }
         }
-
-        return 0;
     }
 }
-
-
-//    public int intValue(Integer part1, Integer part2) {
-//
-//        int rest = part1;
-//        int result = 0;
-//
-//        for (int i = 7; i >= 0; i--) {
-//            if (rest >= Math.pow(2, i)) {
-//                result += Math.pow(2, i);
-//                rest -= Math.pow(2, i);
-//            }
-//        }
-//
-//        rest = part2;
-//        for (int i = 7; i >= 0; i--) {
-//            if (rest >= Math.pow(2, i)) {
-//                result += Math.pow(2, i + 8);
-//                rest -= Math.pow(2, i);
-//            }
-//        }
-//        return result;
-//    }
 
