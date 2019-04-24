@@ -1,5 +1,7 @@
 package algorithms.mazeGenerators;
 
+import java.util.ArrayList;
+
 public class Maze {
 
     private int rows;
@@ -157,6 +159,37 @@ public class Maze {
         }
     }
 
+
+//    public byte[] toByteArray() {
+//
+//        Integer rows = this.rows;
+//        Integer cols = this.columns;
+//        Integer startRow = this.startPosition.getRowIndex();
+//        Integer startCol = this.startPosition.getColumnIndex();
+//        Integer goalRow = this.goalPosition.getRowIndex();
+//        Integer goalCol = this.goalPosition.getColumnIndex();
+//        ArrayList<Integer> mazeContent = new ArrayList<>();
+//        byte[] result = new byte[rows * cols + 6];
+//
+//        for (int i = 0; i < rows; i++) {
+//            for (int j = 0; j < cols; j++) {
+//                mazeContent.add(this.maze[i][j]);
+//            }
+//        }
+//
+//        result[0] = rows.byteValue();
+//        result[1] = cols.byteValue();
+//        result[2] = startRow.byteValue();
+//        result[3] = startCol.byteValue();
+//        result[4] = goalRow.byteValue();
+//        result[5] = goalCol.byteValue();
+//
+//        for (int i = 6, j = 0; i < result.length; i++, j++) {
+//
+//            result[i] = mazeContent.get(j).byteValue();
+//        }
+//        return result;
+//    }
     /**
      * function that represent the maze as an byte array (not compressed)
      *

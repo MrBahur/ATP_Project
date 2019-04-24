@@ -15,11 +15,63 @@ public class MyCompressorOutputStream extends OutputStream {
         this.out = out;
     }
 
-    //TODO implement and document
+
     @Override
     public void write(int b) throws IOException {
 
+        out.write(((Integer) b).byteValue());
     }
+
+    public void write(int b, int numOfBytesPerIndex) throws IOException {
+
+        if (numOfBytesPerIndex == 1) {
+            write(b);
+        }
+        else if (numOfBytesPerIndex == 2) {
+            write(b / 255); //multiply by
+            write(b % 255); //remainder
+        }
+        else if (numOfBytesPerIndex == 3) {
+            write(b / 65025); //65025 multiply by
+            write((b % 65025) / 255); //first remainder multiply by
+            write((b % 65025) % 255); //second remainder
+
+        }
+    }
+
+//    @Override
+//    public void write(int b) throws IOException {
+//
+//        int rest = b;
+//        Integer char1 = 0, char2 = 0;
+//        int[] binaryRepresentation = new int[16];
+//        byte[] result = new byte[2];
+//
+//        for (int i = 15; rest > 0; i--) {
+//            if ((Math.pow(2, i)) <= rest) {
+//                binaryRepresentation[i] = 1;
+//                rest -= (Math.pow(2, i));
+//            }
+//        }
+//        int j = 0;
+//        for (; j < 8; j++) {
+//            if (binaryRepresentation[j] == 1) {
+//                char1 = +(int) (Math.pow(2, j));
+//            }
+//        }
+//        for (; j < 16; j++) {
+//            if (binaryRepresentation[j] == 1) {
+//                char2 = +(int) (Math.pow(2, j - 8));
+//            }
+//        }
+//        byte c1 = char1.byteValue();
+//        result[0] = c1;
+//        byte c2 = char2.byteValue();
+//        result[1] = c2;
+//
+//        out.write(result[0]);
+//        out.write(result[1]);
+//    }
 
     @Override
 /**
@@ -47,6 +99,7 @@ public class MyCompressorOutputStream extends OutputStream {
             ArrayList<Byte> newPattern;
             int previousPatternIndex;
             int currentPatternIndex = 1;
+            int numOfBytesForIndex = 1;
 
             while (i < b.length) {
 
@@ -57,34 +110,30 @@ public class MyCompressorOutputStream extends OutputStream {
                 while (indexOf(dictionary, newPattern) != -1) { //The pattern is in the list
 
                     previousPatternIndex = indexOf(dictionary, newPattern);
-                    if (i < b.length - 1) { //Add the next byte to the new pattern
-                        i++;
-                        newPattern.add(b[i]);
-                    } else {
-                        /*If all the bytes were inserted to the dictionary the last pattern
-                         is being added to the dictionary with a default previousPatternIndex*/
-                        previousPatternIndex = 0;
+
+                    if (i == b.length - 1) {
                         break;
                     }
+                    i++;
+                    newPattern.add(b[i]);
                 }
 
                 dictionary.put(newPattern, new Pair<>(currentPatternIndex, previousPatternIndex));
                 currentPatternIndex++;
+                if (currentPatternIndex > 255) {
+                    numOfBytesForIndex = 2;
+                }
+                if (currentPatternIndex > 65025) {
+                    numOfBytesForIndex = 3;
+                }
                 Pair newResultPair = new Pair(previousPatternIndex, b[i]);
+
+
                 resultPairs.add(newResultPair);
                 i++;
             }
 
-            for (i = 0; i < resultPairs.size(); i++) {
-
-                Pair res = resultPairs.get(i);
-
-                char[] c = convertToChars((Integer)res.getKey());
-
-                out.write(c[0]);
-                out.write(c[1]);
-                out.write(res.getValue().toString().getBytes());
-            }
+            writeToOutput(resultPairs, numOfBytesForIndex);
         }
         return;
     }
@@ -105,40 +154,16 @@ public class MyCompressorOutputStream extends OutputStream {
         return dictionary.get(pattern).getKey();
     }
 
-    /**
-     * Converts an Integer to 2 characters - converts up to the value of 65,535
-     * @param intToConvert
-     * @return 2 characters that represent the Integer
-     */
-    public char[] convertToChars(Integer intToConvert) {
+    public void writeToOutput(ArrayList<Pair<Integer, Byte>> resultPairs, int numOfBytesPerIndex) throws IOException {
 
-        int rest = intToConvert;
-        int char1 = 0, char2 = 0;
-        int[] binaryRepresentation = new int[16];
-        char[] result = new char[2];
+        out.write(((Integer)numOfBytesPerIndex).byteValue());
 
-        for (int i = 15; rest > 0; i--) {
-            if ((Math.pow(2, i)) <= rest) {
-                binaryRepresentation[i] = 1;
-                rest -= (Math.pow(2,i));
-            }
-        }
-        int j = 0;
-        for (; j < 8; j++) {
-            if (binaryRepresentation[j] == 1) {
-                char1 = +(int)(Math.pow(2,j));
-            }
-        }
-        for (; j < 16; j++) {
-            if (binaryRepresentation[j] == 1) {
-                char2 = +(int)(Math.pow(2,j-8));
-            }
-        }
-        char c1 = (char) char1;
-        result[0] = c1;
-        char c2 = (char) char2;
-        result[1] = c2;
+        for (int i = 0; i < resultPairs.size(); i++) {
 
-        return result;
+            Pair res = resultPairs.get(i);
+
+            write((int) res.getKey(), numOfBytesPerIndex);
+            out.write((byte) res.getValue());
+        }
     }
 }

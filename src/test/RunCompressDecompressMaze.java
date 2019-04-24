@@ -21,10 +21,6 @@ public class RunCompressDecompressMaze {
                     FileOutputStream(mazeFileName));
             //maze.print(); /////////////////////// added for tests/////////////////////////////////////////////////////////////////
             byte[] b = maze.toByteArray();
-//            for (byte b1:b
-//                 ) {
-//                System.out.print(b1 + " ");
-//            }
             System.out.println();
             System.out.println(b.length);
             System.out.println();
@@ -36,17 +32,25 @@ public class RunCompressDecompressMaze {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        byte savedMazeBytes[] = new byte[0];
-//        try {
-//            //read maze from file
-//            InputStream in = new MyDecompressorInputStream(new
-//                    FileInputStream(mazeFileName));
-//            savedMazeBytes = new byte[maze.toByteArray().length];
-//            in.read(savedMazeBytes);
-//            in.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        byte savedMazeBytes[] = new byte[0];
+        try {
+            //read maze from file
+            InputStream in = new MyDecompressorInputStream(new
+                    FileInputStream(mazeFileName));
+            savedMazeBytes = new byte[maze.toByteArray().length];
+            byte[] b = maze.toByteArray();
+//            for (byte b1:b
+//            ) {
+//                System.out.print(b1 + " ");
+//            }
+            System.out.println();
+            in.read(savedMazeBytes);
+            System.out.println();
+            System.out.println("Arrays : " + Arrays.equals(savedMazeBytes,maze.toByteArray()));
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        Maze loadedMaze = new Maze(savedMazeBytes);
 //        boolean areMazesEquals =
 //                Arrays.equals(loadedMaze.toByteArray(), maze.toByteArray());
