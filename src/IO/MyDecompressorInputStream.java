@@ -1,7 +1,5 @@
 package IO;
 
-import javafx.util.Pair;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,14 +10,26 @@ public class MyDecompressorInputStream extends InputStream {
 
     private InputStream in;
 
+    private Map<Integer, ArrayList<Byte>> dictionary;
+    private ArrayList<Byte> newPattern;
+
+    private int numOfBytesPerIndex;
+    private int currentIndex;
+
+
     public MyDecompressorInputStream(InputStream in) {
         this.in = in;
+        dictionary = new HashMap();
+        numOfBytesPerIndex = 0;
+        currentIndex = 1;
+
     }
 
     @Override
     public int read() throws IOException {
-        return 0;
+        return in.read();
     }
+
 
     /**
      * Sets a byte[] using the information read from the input Stream
@@ -30,10 +40,8 @@ public class MyDecompressorInputStream extends InputStream {
     @Override
     public int read(byte[] b) throws IOException {
 
-        Map<Integer, ArrayList<Byte>> dictionary = new HashMap();
-
-        int numOfBytesPerIndex = 0;
-        int currentIndex = 1;
+        Integer previousIndex;
+        Integer extraByte;
 
         while (in.available() != 0) {
 
@@ -41,11 +49,11 @@ public class MyDecompressorInputStream extends InputStream {
                 numOfBytesPerIndex = in.read();
             }
 
-            Integer previousIndex = previousIndex(numOfBytesPerIndex);
-            Integer extraByte = in.read();
+             previousIndex = previousIndex(numOfBytesPerIndex);
+             extraByte = in.read();
 
 
-            ArrayList<Byte> newPattern = new ArrayList<>();
+            newPattern = new ArrayList<>();
 
             if (previousIndex != 0) {
 
@@ -57,6 +65,7 @@ public class MyDecompressorInputStream extends InputStream {
             }
             newPattern.add(extraByte.byteValue());
             dictionary.put(currentIndex, newPattern);
+            //Add the pattern and the index that indicates its turn to be added to the array
 
             currentIndex++;
         }
