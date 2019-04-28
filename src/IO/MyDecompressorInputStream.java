@@ -16,6 +16,9 @@ public class MyDecompressorInputStream extends InputStream {
     private int numOfBytesPerIndex;
     private int currentIndex;
 
+    private int previousIndex;
+    private int extraByte;
+
 
     public MyDecompressorInputStream(InputStream in) {
         this.in = in;
@@ -40,9 +43,6 @@ public class MyDecompressorInputStream extends InputStream {
     @Override
     public int read(byte[] b) throws IOException {
 
-        Integer previousIndex;
-        Integer extraByte;
-
         while (in.available() != 0) {
 
             if (currentIndex == 1) { //The first byte from the inputStream indicates the size of each index
@@ -63,7 +63,7 @@ public class MyDecompressorInputStream extends InputStream {
                     newPattern.add(previousPattern.get(i));
                 }
             }
-            newPattern.add(extraByte.byteValue());
+            newPattern.add((byte)extraByte);
             dictionary.put(currentIndex, newPattern);
             //Add the pattern and the index that indicates its turn to be added to the array
 

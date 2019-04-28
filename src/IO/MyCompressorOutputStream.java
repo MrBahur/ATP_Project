@@ -10,9 +10,31 @@ import java.util.HashMap;
 public class MyCompressorOutputStream extends OutputStream {
 
     private OutputStream out;
+    private HashMap<ArrayList<Byte>, Pair<Integer, Integer>> dictionary;
+    /*pattern, pair<index,previous index>
+             HashMap of:
+             * Patterns - every new pattern is being added to the dictionary
+             * Pairs:
+             - the index of the new pattern in the dictionary
+             - the index of the longest pattern which is contained in the new pattern. - if there is no
+            such pattern the index equals to 0. */
+
+    private ArrayList<Pair<Integer, Byte>> resultPairs;
+            /*The final result  - pairs of the previous pattern index and the additional byte which
+            together create a new pattern. */
+    private         ArrayList<Byte> newPattern;
+    private int numOfBytesForIndex;
+    private int previousPatternIndex;
+    private int currentPatternIndex;
+
 
     public MyCompressorOutputStream(OutputStream out) {
         this.out = out;
+        dictionary = new HashMap();
+        resultPairs = new ArrayList<>();
+        currentPatternIndex = 1;
+        numOfBytesForIndex = 1;
+
     }
 
 
@@ -56,23 +78,8 @@ public class MyCompressorOutputStream extends OutputStream {
             throw new NullPointerException();
         } else {
 
-            HashMap<ArrayList<Byte>, Pair<Integer, Integer>> dictionary = new HashMap();
-            /*pattern, pair<index,previous index>
-             HashMap of:
-             * Patterns - every new pattern is being added to the dictionary
-             * Pairs:
-             - the index of the new pattern in the dictionary
-             - the index of the longest pattern which is contained in the new pattern. - if there is no
-            such pattern the index equals to 0. */
-            ArrayList<Pair<Integer, Byte>> resultPairs = new ArrayList<>();
-            /*The final result  - pairs of the previous pattern index and the additional byte which
-            together create a new pattern. */
             dictionary.put(null, new Pair(0, 0)); //The first pattern (default)
             int i = 0;
-            ArrayList<Byte> newPattern;
-            int previousPatternIndex;
-            int currentPatternIndex = 1;
-            int numOfBytesForIndex = 1;
 
             while (i < b.length) {
 
