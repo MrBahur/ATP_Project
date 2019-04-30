@@ -43,10 +43,39 @@ public class Maze {
         this.setGoalPosition(new Position(retrieveDataFromByteArray(b, 4), retrieveDataFromByteArray(b, 5)));
         this.maze = new int[rows][columns];
         int start = 6 * sizeOfData + 1; // first index that shows maze cells info
-        for (int i = start, j = 0, k = 0; i < b.length; i++) {
-            fillNextEightCells(b[i] & 0xFF, i - start); // b[i] & 0xFF stands for changing from signed
-            // byte to unsigned int.
+        int[] arrayOfMaze = new int[8 * (b.length - start)];
+        for (int i = 0; i < arrayOfMaze.length; i++) {
+            arrayOfMaze[i] = -1;
         }
+        int index = 0;
+        for (int i = start, j = 0, k = 0; i < b.length - 1; i++) {
+            int x = b[i] & 0xFF;
+            index = i;
+            for (int l = 7; l >= 0; l--) {
+                arrayOfMaze[(i - start) * 8 + l] = x % 2;
+                x /= 2;
+            }
+        }
+        int i = 0;
+        for (int j = 0; j < rows; j++) {
+            for (int k = 0; k < columns; k++) {
+                maze[j][k] = arrayOfMaze[i];
+                i++;
+            }
+        }
+        int count = 0;
+        for (int j = 0; j < columns; j++) {
+            if (maze[rows - 1][j] == -1) {
+                count++;
+            }
+        }
+        int x = b[index + 1] & 0xFF;
+
+        for (int j = 0; j < count; j++) {
+            maze[rows - 1][columns - 1 - j] = x % 2;
+            x /= 2;
+        }
+
 
     }
 
@@ -60,14 +89,14 @@ public class Maze {
     private void fillNextEightCells(int data, int index) {
         for (int i = 7; i >= 0; i--) {
             int row = getRowIndex(index * 8 + i); // the correct row index
-            if(row==rows)
+            if (row == rows)
                 continue;
             int col = getColsIndex(index * 8 + i); // the correct cols index
             maze[row][col] = data % 2;
             data /= 2;
         }
-        if(data==1){
-            maze[rows-1][columns-1]=1;
+        if (data == 1) {
+            maze[rows - 1][columns - 1] = 1;
         }
     }
 
@@ -102,7 +131,7 @@ public class Maze {
     private int retrieveDataFromByteArray(byte[] byteArray, int index) {
         int sizeOfData = byteArray[0];
         int data = 0;
-        for (int i = (index ) * sizeOfData+1; i <= (index + 1) * sizeOfData; i++) {
+        for (int i = (index) * sizeOfData + 1; i <= (index + 1) * sizeOfData; i++) {
             int b = byteArray[i] & 0xFF;
             // byteArray[i] & 0xFF stands for changing from signed byte to unsigned int
             data *= 256;
