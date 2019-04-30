@@ -7,19 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MyDecompressorInputStream extends InputStream {
-
     private InputStream in;
-
     private Map<Integer, ArrayList<Byte>> dictionary;
-
     private int numOfBytesPerIndex;
     private int currentIndex;
     private int previousIndex;
     private int extraByte;
 
-
     public MyDecompressorInputStream(InputStream in) {
-
         this.in = in;
         dictionary = null;
         numOfBytesPerIndex = 0;
@@ -28,12 +23,10 @@ public class MyDecompressorInputStream extends InputStream {
         extraByte = 0;
 
     }
-
     @Override
     public int read() throws IOException {
         return in.read();
     }
-
 
     /**
      * Sets a byte[] using the information read from the input Stream
@@ -44,7 +37,6 @@ public class MyDecompressorInputStream extends InputStream {
      */
     @Override
     public int read(byte[] b) throws IOException {
-
         //initializing fields (every time we call this function)
         dictionary = new HashMap<>();
         ArrayList<Byte> newPattern = null;
@@ -54,17 +46,12 @@ public class MyDecompressorInputStream extends InputStream {
         extraByte = 0;
 
         while (in.available() != 0) {
-
             if (currentIndex == 1) { //The first byte from the inputStream indicates the size of each index
                 numOfBytesPerIndex = in.read();
             }
-
             previousIndex = previousIndex(numOfBytesPerIndex);
             extraByte = in.read();
-
-
             newPattern = new ArrayList<>();
-
             if (previousIndex != 0) {
 
                 ArrayList<Byte> previousPattern = dictionary.get(previousIndex);
@@ -76,9 +63,7 @@ public class MyDecompressorInputStream extends InputStream {
 
             currentIndex++;
         }
-
         setBytesArray(dictionary, b, currentIndex);
-
         return 0;
     }
 
@@ -89,10 +74,8 @@ public class MyDecompressorInputStream extends InputStream {
      * @return the value of the index
      */
     private Integer previousIndex(Integer numOfBytesPerIndex) {
-
         Integer previousIndex = null;
         try {
-
             if (numOfBytesPerIndex == 1) {
                 previousIndex = in.read();
             } else if (numOfBytesPerIndex == 2) {
@@ -120,7 +103,6 @@ public class MyDecompressorInputStream extends InputStream {
      *                     (which is equal to the number of bytes in b)
      */
     private void setBytesArray(Map<Integer, ArrayList<Byte>> dictionary, byte[] b, int currentIndex) {
-
         int i = 0;
         for (int j = 1; j < currentIndex; j++) {
             for (int k = 0; k < dictionary.get(j).size(); k++) {
@@ -128,7 +110,6 @@ public class MyDecompressorInputStream extends InputStream {
                     b[i] = dictionary.get(j).get(k);
                     i++;
                 }
-
             }
         }
     }
