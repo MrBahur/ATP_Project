@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class MyCompressorOutputStream extends OutputStream {
 
     private OutputStream out;
+
     private HashMap<ArrayList<Byte>, Pair<Integer, Integer>> dictionary;
     /*pattern, pair<index,previous index>
              HashMap of:
@@ -22,7 +23,9 @@ public class MyCompressorOutputStream extends OutputStream {
     private ArrayList<Pair<Integer, Byte>> resultPairs;
             /*The final result  - pairs of the previous pattern index and the additional byte which
             together create a new pattern. */
+
     private ArrayList<Byte> newPattern;
+
     private int numOfBytesForIndex;
     private int previousPatternIndex;
     private int currentPatternIndex;
@@ -36,7 +39,6 @@ public class MyCompressorOutputStream extends OutputStream {
         numOfBytesForIndex = 1;
 
     }
-
 
     @Override
     public void write(int b) throws IOException {

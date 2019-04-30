@@ -11,20 +11,21 @@ public class MyDecompressorInputStream extends InputStream {
     private InputStream in;
 
     private Map<Integer, ArrayList<Byte>> dictionary;
-    private ArrayList<Byte> newPattern;
 
     private int numOfBytesPerIndex;
     private int currentIndex;
-
     private int previousIndex;
     private int extraByte;
 
 
     public MyDecompressorInputStream(InputStream in) {
+
         this.in = in;
-        dictionary = new HashMap();
+        dictionary = null;
         numOfBytesPerIndex = 0;
-        currentIndex = 1;
+        currentIndex = 0;
+        previousIndex = 0;
+        extraByte = 0;
 
     }
 
@@ -43,14 +44,22 @@ public class MyDecompressorInputStream extends InputStream {
     @Override
     public int read(byte[] b) throws IOException {
 
+        //initializing fields (every time we call this function)
+        dictionary = new HashMap();
+        ArrayList<Byte> newPattern = null;
+        currentIndex = 1;
+        numOfBytesPerIndex = 0;
+        previousIndex = 0;
+        extraByte = 0;
+
         while (in.available() != 0) {
 
             if (currentIndex == 1) { //The first byte from the inputStream indicates the size of each index
                 numOfBytesPerIndex = in.read();
             }
 
-             previousIndex = previousIndex(numOfBytesPerIndex);
-             extraByte = in.read();
+            previousIndex = previousIndex(numOfBytesPerIndex);
+            extraByte = in.read();
 
 
             newPattern = new ArrayList<>();
@@ -120,4 +129,3 @@ public class MyDecompressorInputStream extends InputStream {
         }
     }
 }
-
