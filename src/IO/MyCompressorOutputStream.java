@@ -110,11 +110,9 @@ public class MyCompressorOutputStream extends OutputStream {
                 resultPairs.add(newResultPair);
                 i++;
             }
-            try {
-                writeToOutput(resultPairs, numOfBytesForIndex);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            writeToOutput(resultPairs, numOfBytesForIndex);
+
         }
     }
 
@@ -134,16 +132,16 @@ public class MyCompressorOutputStream extends OutputStream {
         return dictionary.get(pattern).getKey();
     }
 
-    private void writeToOutput(ArrayList<Pair<Integer, Byte>> resultPairs, int numOfBytesPerIndex) throws IOException {
-
-        out.write(((Integer) numOfBytesPerIndex).byteValue());
-
-        for (int i = 0; i < resultPairs.size(); i++) {
-
-            Pair res = resultPairs.get(i);
-
-            write((int) res.getKey(), numOfBytesPerIndex);
-            out.write((byte) res.getValue());
+    private void writeToOutput(ArrayList<Pair<Integer, Byte>> resultPairs, int numOfBytesPerIndex) {
+        try {
+            write(((Integer) numOfBytesPerIndex).byteValue());
+            for (int i = 0; i < resultPairs.size(); i++) {
+                Pair<Integer, Byte> res = resultPairs.get(i);
+                write(res.getKey(), numOfBytesPerIndex);
+                write(res.getValue() & 0xFF);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

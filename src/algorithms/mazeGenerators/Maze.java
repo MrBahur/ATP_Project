@@ -72,6 +72,9 @@ public class Maze {
         }
         //filling the remaining cells
         int x = b[index + 1] & 0xFF;
+        if (count != 8) {
+            x /= 2;
+        }
         for (int j = 0; j < count; j++) {
             maze[rows - 1][columns - 1 - j] = x % 2;
             x /= 2;
