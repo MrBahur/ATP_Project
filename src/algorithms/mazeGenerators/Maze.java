@@ -63,61 +63,19 @@ public class Maze {
                 i++;
             }
         }
+        //counting the remaining cells to fill
         int count = 0;
         for (int j = 0; j < columns; j++) {
             if (maze[rows - 1][j] == -1) {
                 count++;
             }
         }
+        //filling the remaining cells
         int x = b[index + 1] & 0xFF;
-
         for (int j = 0; j < count; j++) {
             maze[rows - 1][columns - 1 - j] = x % 2;
             x /= 2;
         }
-
-
-    }
-
-    /**
-     * filling the next eight cells in the maze from index to index +7
-     * using data from byte
-     *
-     * @param data  the data converted to byte
-     * @param index the index to start adding cell from
-     */
-    private void fillNextEightCells(int data, int index) {
-        for (int i = 7; i >= 0; i--) {
-            int row = getRowIndex(index * 8 + i); // the correct row index
-            if (row == rows)
-                continue;
-            int col = getColsIndex(index * 8 + i); // the correct cols index
-            maze[row][col] = data % 2;
-            data /= 2;
-        }
-        if (data == 1) {
-            maze[rows - 1][columns - 1] = 1;
-        }
-    }
-
-    /**
-     * given index in the bit array return the column index that is correlated with it
-     *
-     * @param index the index in the bit array
-     * @return column index
-     */
-    private int getColsIndex(int index) {
-        return index % columns;
-    }
-
-    /**
-     * given index in the bit array return the row index that is correlated with it
-     *
-     * @param index the index in the bit array
-     * @return row index
-     */
-    private int getRowIndex(int index) {
-        return index / columns;
     }
 
     /**
