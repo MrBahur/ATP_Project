@@ -49,9 +49,10 @@ public class RunCompressDecompressMaze {
                 boolean areMazesEquals =
                         Arrays.equals(loadedMaze.toByteArray(), maze.toByteArray());
 
-                if (!areMazesEquals)
-                    System.out.println(String.format("Mazes (%d,%d) equal: %s", i, j, areMazesEquals));
-                else if (i != previousI) {
+                if (!areMazesEquals) {
+                    System.out.println(String.format("Mazes (%d,%d) equal: %s", i, j, false));
+                    break;
+                } else if (i != previousI) {
                     System.out.println(String.format("Still good (%d,%d)", i, j));
                     previousI = i;
                 }
