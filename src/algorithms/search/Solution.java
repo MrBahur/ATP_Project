@@ -1,9 +1,10 @@
 package algorithms.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Solution {
+public class Solution implements Serializable {
 
     AState lastState;
 
@@ -13,7 +14,7 @@ public class Solution {
 
     public ArrayList<AState> getSolutionPath() {
         if (lastState == null) {
-            return new ArrayList<AState>(); //no solution to the maze, empty array list
+            return new ArrayList<>(); //no solution to the maze, empty array list
         } else { //recursive finding the solution using linkedList
             LinkedList<AState> listOfState = new LinkedList<>();
             AState tmp = lastState;
@@ -21,7 +22,7 @@ public class Solution {
                 listOfState.addFirst(tmp);
                 tmp = tmp.getCameFrom();
             }
-            return new ArrayList<AState>(listOfState);
+            return new ArrayList<>(listOfState);
         }
     }
 
