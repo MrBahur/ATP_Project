@@ -10,7 +10,8 @@ import java.io.*;
 
 public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
-    private static String tempDirectoryPath;
+    private String tempDirectoryPath;
+    private File tempDirectory;
     private File mazesDir;
     private File solutionsDir;
     private Maze mazeToSolve;
@@ -22,11 +23,13 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     public ServerStrategySolveSearchProblem() {
 
 
-        if(tempDirectoryPath == null) {
+        if(tempDirectory ==  null) {
             tempDirectoryPath =  System.getProperty("java.io.tmpdir");
-            mazesDir= new File(tempDirectoryPath, "Mazes");
+            tempDirectory = new File(tempDirectoryPath, "tempDir");
+            tempDirectory.mkdir();
+            mazesDir= new File(tempDirectory.getPath(), "Mazes");
             mazesDir.mkdir();
-            solutionsDir = new File(tempDirectoryPath, "Solutions");
+            solutionsDir = new File(tempDirectory.getPath(), "Solutions");
             solutionsDir.mkdir();
         }
         mazeToSolve = null;
