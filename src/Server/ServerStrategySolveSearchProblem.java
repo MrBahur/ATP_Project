@@ -1,6 +1,7 @@
 package Server;
 
 import IO.MyCompressorOutputStream;
+import IO.MyDecompressorInputStream;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.DepthFirstSearch;
 import algorithms.search.SearchableMaze;
@@ -23,15 +24,13 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     public ServerStrategySolveSearchProblem() {
 
 
-        if(tempDirectory ==  null) {
-            tempDirectoryPath =  System.getProperty("java.io.tmpdir");
-            tempDirectory = new File(tempDirectoryPath, "tempDir");
-            tempDirectory.mkdir();
-            mazesDir= new File(tempDirectory.getPath(), "Mazes");
-            mazesDir.mkdir();
-            solutionsDir = new File(tempDirectory.getPath(), "Solutions");
-            solutionsDir.mkdir();
-        }
+        tempDirectoryPath = System.getProperty("java.io.tmpdir");
+        tempDirectory = new File(tempDirectoryPath, "tempDir");
+        tempDirectory.mkdir();
+        mazesDir = new File(tempDirectory.getPath(), "Mazes");
+        mazesDir.mkdir();
+        solutionsDir = new File(tempDirectory.getPath(), "Solutions");
+        solutionsDir.mkdir();
         mazeToSolve = null;
         fromClient = null;
         toClient = null;
@@ -42,7 +41,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     @Override
     public void serverStrategy(InputStream inFromClient, OutputStream outToClient) {
 
-
+        System.out.println(mazesDir.getPath());
         try {
             fromClient = new ObjectInputStream(inFromClient);
             toClient = new ObjectOutputStream(outToClient);
@@ -51,7 +50,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             solutionToClient = null;
             boolean areEqual = false;
 
-            FileOutputStream out = new FileOutputStream(tempDirectoryPath + "/mazeToSolve.txt");
+            FileOutputStream out = new FileOutputStream(tempDirectory.getPath() + "/mazeToSolve");
             MyCompressorOutputStream newMaze = new MyCompressorOutputStream(out);
             newMaze.write(mazeToSolve.toByteArray());
             out.flush();
@@ -61,22 +60,31 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             File maze = null;
             int numOfMazes = mazesDirContent.length;
 
-            InputStream in1 = new FileInputStream(tempDirectoryPath + "/mazeToSolve.txt");
+            //InputStream in1 = new FileInputStream(tempDirectory.getPath() + "/mazeToSolve");
             for (int i = 0; i < numOfMazes; i++) {
                 areEqual = true;
-                maze = mazesDirContent[i];
-                InputStream in2 = new FileInputStream(maze);
-                while ((in1.available() != 0) || (in2.available() != 0)) {
-                    if(in1.available()==0 || in2.available()==0){
-                        areEqual = false;
-                        break;
+                maze = new File(mazesDir.getPath() + "/" + i);
+
+
+                try {
+                    BufferedReader br1 = new BufferedReader(new FileReader(tempDirectory.getPath() + "/mazeToSolve"));
+                    BufferedReader br2 = new BufferedReader(new FileReader(mazesDir.getPath() + "/" + i));
+                    String line1 = null;
+                    String line2 = null;
+
+                    while (((line1 = br1.readLine()) != null) | ((line2 = br2.readLine()) != null)) {
+                        if ((line1 == null) || (line2 == null)) {
+                            areEqual = false;
+                            break;
+                        }
+                        if (!line1.equals(line2)) {
+                            areEqual = false;
+                        }
                     }
-                    if (in1.read() != in2.read()) {
-                        areEqual = false;
-                        break;
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                if(areEqual == true){
+                if (areEqual == true) {
                     break;
                 }
             }
@@ -94,6 +102,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
                             new FileOutputStream(mazesDir.getPath() + "/" + numOfMazes);
                     MyCompressorOutputStream compressedMaze = new MyCompressorOutputStream(addMaze);
                     compressedMaze.write(mazeToSolve.toByteArray());
+
                     addMaze.flush();
                     addMaze.close();
 

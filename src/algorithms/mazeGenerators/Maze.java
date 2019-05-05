@@ -9,6 +9,7 @@ public class Maze implements Serializable {
     private int[][] maze;
     private Position startPosition;
     private Position goalPosition;
+    private int byteArraySize;
 
     /**
      * Constructor for maze
@@ -20,6 +21,7 @@ public class Maze implements Serializable {
         this.rows = rows;
         this.columns = columns;
         maze = new int[rows][columns];
+        byteArraySize = 0;
     }
 
     /**
@@ -199,6 +201,7 @@ public class Maze implements Serializable {
             }
             insertDataIntoByteArray(byteArray, toInsert, i, 1);
         }
+        byteArraySize = byteArray.length;
         return byteArray;
     }
 
@@ -241,5 +244,9 @@ public class Maze implements Serializable {
             }
             byteArray[1 + index * sizeOfData + i] = (byte) toInsert;
         }
+    }
+
+    public int getByteArraySize() {
+        return byteArraySize;
     }
 }

@@ -19,20 +19,20 @@ import java.util.ArrayList;
 public class RunCommunicateWithServers {
     public static void main(String[] args) {
 //Initializing servers
-        //Server mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
-        Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
+        Server mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
+        //Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
         //Server stringReverserServer = new Server(5402, 1000, new ServerStrategyStringReverser());
 //Starting servers
-       solveSearchProblemServer.start();
-      //  mazeGeneratingServer.start();
+       //solveSearchProblemServer.start();
+       mazeGeneratingServer.start();
 //stringReverserServer.start();
 //Communicating with servers
-     //   CommunicateWithServer_MazeGenerating();
-     CommunicateWithServer_SolveSearchProblem();
+        CommunicateWithServer_MazeGenerating();
+     //CommunicateWithServer_SolveSearchProblem();
 //CommunicateWithServer_StringReverser();
 //Stopping all servers
-       // mazeGeneratingServer.stop();
-      solveSearchProblemServer.stop();
+        mazeGeneratingServer.stop();
+      //solveSearchProblemServer.stop();
 //stringReverserServer.stop();
     }
 
@@ -50,14 +50,14 @@ public class RunCommunicateWithServers {
                         ObjectInputStream fromServer = new
                                 ObjectInputStream(inFromServer);
                         toServer.flush();
-                        int[] mazeDimensions = new int[]{10, 10};
+                        int[] mazeDimensions = new int[]{1000, 1000};
                         toServer.writeObject(mazeDimensions); //send maze dimensions to server
                         toServer.flush();
                         byte[] compressedMaze = (byte[])
                                 fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
                         InputStream is = new MyDecompressorInputStream(new
                                 ByteArrayInputStream(compressedMaze));
-                        byte[] decompressedMaze = new byte[1000 /*CHANGESIZE ACCORDING TO YOU MAZE SIZE*/];
+                        byte[] decompressedMaze = new byte[10000000 /*CHANGESIZE ACCORDING TO YOU MAZE SIZE*/];
                         //allocating byte[] for the decompressedmaze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
                         Maze maze = new Maze(decompressedMaze);
@@ -88,9 +88,37 @@ public class RunCommunicateWithServers {
                                         ObjectInputStream(inFromServer);
                                 toServer.flush();
                                 MyMazeGenerator mg = new MyMazeGenerator();
-                                Maze maze = mg.generate(4, 4);
-                                maze.print();
+                                Maze maze = mg.generate(10, 10);
+
+
+
+//
+//                                byte savedMazeBytes[] = new byte[20];
+//                                try {
+////read maze from file
+//                                    InputStream in = new MyDecompressorInputStream(new
+//                                            FileInputStream(
+//                                                    "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/76"
+//                                    ));
+//                                  //  savedMazeBytes = new byte[maze.toByteArray().length];
+//                                    in.read(savedMazeBytes);
+//                                    in.close();
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                Maze maze = new Maze(savedMazeBytes);
+
+
+                                //maze.print();
+//                                System.out.println(maze.toByteArray().length);
+//                                byte[] b = maze.toByteArray();
+//                                for (int i=0;i<b.length;i++){
+//                                    System.out.print(b[i]);
+//                                }
+//                                System.out.println();
+//                                System.out.println("XXXXXXXXXXXXXXXXXXXX");
                                 toServer.writeObject(maze); //send maze to server
+
                                 toServer.flush();
                                 Solution mazeSolution = (Solution)
                                         fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server

@@ -5,6 +5,7 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MyMazeGenerator;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy {
 
@@ -20,13 +21,19 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
             int cols = mazeSize[1];
             Maze maze = (new MyMazeGenerator()).generate(rows/*rows*/, cols/*columns*/);
             byte[] mazeBytesArray = maze.toByteArray();
-            MyCompressorOutputStream compressMaze = new MyCompressorOutputStream(new FileOutputStream("tempFile"));
+            OutputStream bOut = new ByteArrayOutputStream();
+            MyCompressorOutputStream compressMaze = new MyCompressorOutputStream(bOut);
+            bOut.flush();
+            bOut.close();
+            //  MyCompressorOutputStream compressMaze = new MyCompressorOutputStream(new FileOutputStream("tempFile"));
             compressMaze.write(mazeBytesArray);
-            FileInputStream inFile = new FileInputStream("tempFile");
+            //FileInputStream inFile = new FileInputStream("tempFile");
+            byte[] mazeRepresentation = new byte[((ByteArrayOutputStream) bOut).size()];
+            InputStream bIn = new ByteArrayInputStream(((ByteArrayOutputStream) bOut).toByteArray());
+            bIn.read(mazeRepresentation);
 
-            //TODO change the creation of temp file
-            byte[] mazeRepresentation = new byte[mazeBytesArray.length*2];
-            inFile.read(mazeRepresentation);
+            // byte[] mazeRepresentation = new byte[mazeBytesArray.length * 2];
+            //  inFile.read(mazeRepresentation);
             toClient.writeObject(mazeRepresentation);
             toClient.flush();
             toClient.close();
