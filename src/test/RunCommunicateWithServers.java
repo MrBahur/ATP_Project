@@ -125,7 +125,7 @@ public class RunCommunicateWithServers {
                             }
                         }
                     });
-            client.communicateWithServer();
+            client.communicateWithServer();//
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
