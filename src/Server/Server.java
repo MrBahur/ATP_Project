@@ -1,9 +1,12 @@
 package Server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Objects;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -28,6 +31,10 @@ public class Server {
 
     public void start() {
         mainThread.start();
+        Scanner s = new Scanner(System.in);
+        do {
+            System.out.print(">>");
+        } while (!Objects.equals(s.next().toLowerCase(), "exit"));
     }
 
     private void runServer() {
@@ -60,7 +67,6 @@ public class Server {
     }
 
     public void stop() {
-
         if (executor.getActiveCount() == 0) {
             executor.shutdown();
             stop = true;

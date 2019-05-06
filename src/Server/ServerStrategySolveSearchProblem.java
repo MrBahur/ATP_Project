@@ -23,6 +23,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
                 ASearchingAlgorithm searcher = new BestFirstSearch();
                 Solution s = searcher.solve(new SearchableMaze(m));
                 toClient.writeObject(s);
+                //write the solution
             }
 
 
