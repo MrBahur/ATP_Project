@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Server {
     private int port;
@@ -11,6 +13,7 @@ public class Server {
     private IServerStrategy serverStrategy;
     private volatile boolean stop;
     private Thread mainThread;
+    private ThreadPoolExecutor executor;
 
 
     public Server(int port, int listeningIntervalMS, IServerStrategy serverStrategy) {
@@ -18,6 +21,9 @@ public class Server {
         this.listeningIntervalMS = listeningIntervalMS;
         this.serverStrategy = serverStrategy;
         mainThread = new Thread(this::runServer);
+        executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        executor.setCorePoolSize(2);
+        executor.setMaximumPoolSize(2);
     }
 
     public void start() {
@@ -31,21 +37,23 @@ public class Server {
             System.out.println(String.format("Server started at %s!", serverSocket));
             System.out.println(String.format("Server's Strategy: %S", serverSocket.getClass().getSimpleName()));
             System.out.println("Server is waiting for clients...");
+
             while (!stop) {
                 try {
                     Socket clientSocket = serverSocket.accept();
-                    System.out.println(String.format("Client excepted: %s", clientSocket));
-                    try {
-                        serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
-                        clientSocket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    executor.execute(()->{
+                        System.out.println(String.format("Handling client with socket: %s", clientSocket));
+                        try {
+                            serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
+                            clientSocket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
                 } catch (SocketTimeoutException e) {
                     //e.printStackTrace();
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,6 +62,7 @@ public class Server {
     public void stop() {
         stop = true;
         System.out.println("Stopping server");
+        executor.shutdown();
         try {
             mainThread.join();
         } catch (InterruptedException e) {
