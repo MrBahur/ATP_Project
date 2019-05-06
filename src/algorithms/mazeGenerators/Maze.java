@@ -1,6 +1,8 @@
 package algorithms.mazeGenerators;
 
-public class Maze {
+import java.io.Serializable;
+
+public class Maze implements Serializable{
 
     private int rows;
     private int columns;

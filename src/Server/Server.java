@@ -38,12 +38,11 @@ public class Server {
                     try {
                         serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
                         clientSocket.close();
-                        Thread.sleep(2500);
-                    } catch (IOException | InterruptedException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } catch (SocketTimeoutException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
 

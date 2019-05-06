@@ -1,9 +1,10 @@
 package algorithms.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public abstract class AState {
+public abstract class AState implements Serializable {
 
     private String state;
     private double cost;
@@ -49,7 +50,7 @@ public abstract class AState {
     /**
      * Overriding toString for AState
      *
-     * @return
+     * @return string that represent state
      */
     @Override
     public String toString() {
