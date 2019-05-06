@@ -10,15 +10,21 @@ public class Server {
     private int listeningIntervalMS;
     private IServerStrategy serverStrategy;
     private volatile boolean stop;
+    private Thread mainThread;
 
 
     public Server(int port, int listeningIntervalMS, IServerStrategy serverStrategy) {
         this.port = port;
         this.listeningIntervalMS = listeningIntervalMS;
         this.serverStrategy = serverStrategy;
+        mainThread = new Thread(this::runServer);
     }
 
     public void start() {
+        mainThread.start();
+    }
+
+    private void runServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(listeningIntervalMS);
@@ -28,11 +34,11 @@ public class Server {
             while (!stop) {
                 try {
                     Socket clientSocket = serverSocket.accept();
-                    System.out.println(String.format("Client excepted: %s",clientSocket));
-                    try{
-                        serverStrategy.serverStrategy(clientSocket.getInputStream(),clientSocket.getOutputStream());
+                    System.out.println(String.format("Client excepted: %s", clientSocket));
+                    try {
+                        serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
                         clientSocket.close();
-                    }catch (IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } catch (SocketTimeoutException e) {
@@ -48,5 +54,10 @@ public class Server {
     public void stop() {
         System.out.println("Stopping server");
         stop = true;
+        try {
+            mainThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
