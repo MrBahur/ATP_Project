@@ -41,7 +41,7 @@ public class Server {
             while (!stop) {
                 try {
                     Socket clientSocket = serverSocket.accept();
-                    executor.execute(()->{
+                    executor.execute(() -> {
                         System.out.println(String.format("Handling client with socket: %s", clientSocket));
                         try {
                             serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
@@ -62,7 +62,9 @@ public class Server {
     public void stop() {
         stop = true;
         System.out.println("Stopping server");
-        executor.shutdown();
+        if (executor.getActiveCount() == 0) {
+            executor.shutdown();
+        }
         try {
             mainThread.join();
         } catch (InterruptedException e) {
