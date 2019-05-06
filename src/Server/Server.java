@@ -22,8 +22,8 @@ public class Server {
         this.serverStrategy = serverStrategy;
         mainThread = new Thread(this::runServer);
         executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        executor.setCorePoolSize(2);
-        executor.setMaximumPoolSize(2);
+        executor.setCorePoolSize(10);
+        executor.setMaximumPoolSize(10);
     }
 
     public void start() {
@@ -60,15 +60,16 @@ public class Server {
     }
 
     public void stop() {
-        stop = true;
-        System.out.println("Stopping server");
+
         if (executor.getActiveCount() == 0) {
             executor.shutdown();
-        }
-        try {
-            mainThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            stop = true;
+            System.out.println("Stopping server");
+            try {
+                mainThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
