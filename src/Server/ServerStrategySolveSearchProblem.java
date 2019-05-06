@@ -4,6 +4,7 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.search.ASearchingAlgorithm;
 import algorithms.search.BestFirstSearch;
 import algorithms.search.SearchableMaze;
+import algorithms.search.Solution;
 
 import java.io.*;
 
@@ -20,7 +21,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
             } else {
                 ASearchingAlgorithm searcher = new BestFirstSearch();
-                toClient.writeObject(searcher.solve(new SearchableMaze(m)));
+                Solution s = searcher.solve(new SearchableMaze(m));
+                toClient.writeObject(s);
             }
 
 
