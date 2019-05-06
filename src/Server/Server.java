@@ -38,7 +38,8 @@ public class Server {
                     try {
                         serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
                         clientSocket.close();
-                    } catch (IOException e) {
+                        Thread.sleep(2500);
+                    } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 } catch (SocketTimeoutException e) {
@@ -52,8 +53,8 @@ public class Server {
     }
 
     public void stop() {
-        System.out.println("Stopping server");
         stop = true;
+        System.out.println("Stopping server");
         try {
             mainThread.join();
         } catch (InterruptedException e) {

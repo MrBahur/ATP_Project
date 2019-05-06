@@ -4,6 +4,7 @@ import IO.MyCompressorOutputStream;
 import algorithms.mazeGenerators.MyMazeGenerator;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy {
     @Override
@@ -14,11 +15,12 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
             toClient.flush();
 
             int[] dimensions = (int[])fromClient.readObject();
-            int rows = dimensions[0];
-            int cols = dimensions[1];
-
-            MyCompressorOutputStream compressor = new MyCompressorOutputStream(toClient);
-            compressor.write(new MyMazeGenerator().generate(rows,cols).toByteArray());
+            byte[] notCompressedByteArray = (new MyMazeGenerator()).generate(dimensions[0],dimensions[1]).toByteArray();
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            MyCompressorOutputStream compressor = new MyCompressorOutputStream(b);
+            compressor.write(notCompressedByteArray);
+            toClient.writeObject(b.toByteArray());
+            //toClient.writeObject();
 
         }
         catch (Exception e){
