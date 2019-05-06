@@ -35,6 +35,7 @@ public class Server {
         do {
             System.out.print(">>");
         } while (!Objects.equals(s.next().toLowerCase(), "exit"));
+        stop = true;
     }
 
     private void runServer() {
