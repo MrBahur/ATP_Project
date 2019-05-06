@@ -25,7 +25,7 @@ public class MyCompressorOutputStream extends OutputStream {
     private int numOfBytesForIndex;
     private int previousPatternIndex;
     private int currentPatternIndex;
-
+    private int bSize;
 
     public MyCompressorOutputStream(OutputStream out) {
         this.out = out;
@@ -34,6 +34,7 @@ public class MyCompressorOutputStream extends OutputStream {
         numOfBytesForIndex = 0;
         previousPatternIndex = 0;
         currentPatternIndex = 0;
+        bSize = 0;
 
     }
 
@@ -80,19 +81,20 @@ public class MyCompressorOutputStream extends OutputStream {
         currentPatternIndex = 1;
         numOfBytesForIndex = 1;
         ArrayList<Byte> newPattern = null;
+        bSize = b.length;
 
         if (b == null) {
             throw new NullPointerException();
         } else {
-            dictionary.put(null, new Pair<Integer, Integer>(0, 0)); //The first pattern (default)
+            dictionary.put(null, new Pair<>(0, 0)); //The first pattern (default)
             int i = 0;
-            while (i < b.length) {
+            while (i < bSize) {
                 previousPatternIndex = 0;
                 newPattern = new ArrayList<>();
                 newPattern.add(b[i]);
                 while (indexOf(dictionary, newPattern) != -1) { //The pattern is in the list
                     previousPatternIndex = indexOf(dictionary, newPattern);
-                    if (i == b.length - 1) {
+                    if (i == bSize - 1) {
                         break;
                     }
                     i++;
@@ -144,4 +146,6 @@ public class MyCompressorOutputStream extends OutputStream {
             e.printStackTrace();
         }
     }
+
+
 }
