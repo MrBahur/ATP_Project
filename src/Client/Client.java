@@ -20,7 +20,7 @@ public class Client {
             Socket server = new Socket(serverIP, serverPort);
             System.out.println("Client is connected to server!");
             clientStrategy.clientStrategy(server.getInputStream(),server.getOutputStream());
-            server.close();//?
+            server.close();//TODO do i need to close the server in the client? probably not, but i still need to call this method somehow
         } catch (Exception e) {
             e.printStackTrace();
         }

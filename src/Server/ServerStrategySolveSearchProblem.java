@@ -15,6 +15,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
 
             Maze m = (Maze) fromClient.readObject();
+            //TODO fill this case
             if (isSolutionExist(m)) {
 
             } else {
