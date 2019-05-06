@@ -1,13 +1,12 @@
 package Server;
 
 import IO.MyCompressorOutputStream;
-import IO.MyDecompressorInputStream;
 import algorithms.mazeGenerators.Maze;
-import algorithms.search.DepthFirstSearch;
-import algorithms.search.SearchableMaze;
-import algorithms.search.Solution;
+import algorithms.search.*;
 
 import java.io.*;
+
+import java.util.Properties;
 
 public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
@@ -35,13 +34,43 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         fromClient = null;
         toClient = null;
         solutionToClient = null;
-
     }
+
+    //TODO change the searching algorithm according to the configuration file
+
+    //TODO change the path of the configuration file
+    private ASearchingAlgorithm getSearchingAlgorithm() {
+
+         ASearchingAlgorithm searchingAlgorithm = null;
+
+        try (InputStream input = new FileInputStream("/Users/Danielle/IdeaProjects/ATP_Project/resources/config.properties")) {
+
+            Properties prop = new Properties();
+
+            // load a properties file
+            prop.load(input);
+
+
+            String searchingAlgorithmName = prop.getProperty("searchingAlgorithm");
+            if (searchingAlgorithmName.equals("Depth First Search")) {
+                searchingAlgorithm = new DepthFirstSearch();
+            } else if (searchingAlgorithmName.equals("Breadth First Search")) {
+                searchingAlgorithm = new BreadthFirstSearch();
+            } else { //searchingAlgorithmName.equals("Best First Search")
+                searchingAlgorithm = new BestFirstSearch();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return searchingAlgorithm;
+    }
+
+
 
     @Override
     public void serverStrategy(InputStream inFromClient, OutputStream outToClient) {
 
-        System.out.println(mazesDir.getPath());
         try {
             fromClient = new ObjectInputStream(inFromClient);
             toClient = new ObjectOutputStream(outToClient);
@@ -108,9 +137,12 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
                     ObjectOutputStream addSolution =
                             new ObjectOutputStream(new FileOutputStream(solutionsDir.getPath() + "/" + numOfMazes));
-                    DepthFirstSearch dfs = new DepthFirstSearch();
+
                     SearchableMaze searchableMaze = new SearchableMaze(mazeToSolve);
-                    solutionToClient = dfs.solve(searchableMaze);
+
+                    ASearchingAlgorithm  searchingAlgorithm = getSearchingAlgorithm();
+                    solutionToClient = searchingAlgorithm.solve(searchableMaze);
+
                     addSolution.writeObject(solutionToClient);
                     addSolution.flush();
                     addSolution.close();
@@ -121,8 +153,6 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             }
 
             toClient.writeObject(solutionToClient);
-            toClient.flush();
-            toClient.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,4 +161,6 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         }
 
     }
+
 }
+
