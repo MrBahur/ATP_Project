@@ -30,15 +30,30 @@ public class RunCommunicateWithServers {
         mazeGeneratingServer.start();
 //stringReverserServer.start();
 //Communicating with servers
-        for (int i = 0; i < 6; i++) {
-            Thread t = new Thread1();
-            t.start();
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        Thread t1 = new Thread1();
+        t1.start();
+        Thread t2 = new Thread1();
+        t2.start();
+        Thread t3 = new Thread1();
+        t3.start();
+        Thread t4 = new Thread1();
+        t4.start();
+        Thread t5 = new Thread1();
+        t5.start();
+        Thread t6 = new Thread1();
+        t6.start();
+
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+            t5.join();
+            t6.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
@@ -73,7 +88,7 @@ class Thread1 extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        CommunicateWithServer_SolveSearchProblem();
+      //  CommunicateWithServer_SolveSearchProblem();
     }
     private static void CommunicateWithServer_MazeGenerating() {
 
