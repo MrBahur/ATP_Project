@@ -42,6 +42,7 @@ public class Server {
                 System.out.print(">>");
             } while (!Objects.equals(s.next().toLowerCase(), "exit"));
             stop = true;
+            stop();
         }).start();
     }
 
@@ -78,7 +79,6 @@ public class Server {
     public void stop() {
         if (executor.getActiveCount() == 0 && stop) {
             executor.shutdown();
-            stop = true;
             System.out.println("Stopping server");
             try {
                 mainThread.join();
