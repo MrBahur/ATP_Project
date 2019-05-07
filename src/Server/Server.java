@@ -7,8 +7,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 public class Server {
     private int port;
@@ -16,7 +15,7 @@ public class Server {
     private IServerStrategy serverStrategy;
     private volatile boolean stop;
     private Thread mainThread;
-    private ThreadPoolExecutor executor;
+    private ExecutorService executor;
 
 
     public Server(int port, int listeningIntervalMS, IServerStrategy serverStrategy) {
@@ -24,9 +23,7 @@ public class Server {
         this.listeningIntervalMS = listeningIntervalMS;
         this.serverStrategy = serverStrategy;
         mainThread = new Thread(this::runServer);
-        executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        executor.setCorePoolSize(Configurations.getNumOfThreads());
-        executor.setMaximumPoolSize(Configurations.getNumOfThreads());
+        executor = new ThreadPoolExecutor(Configurations.getNumOfThreads(), Configurations.getNumOfThreads(), 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     }
 
     public void start() {
@@ -74,16 +71,18 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public void stop() {
+        stop = true;
+
+        System.out.println("Stopping server");
+        try {
+            mainThread.join();
             executor.shutdown();
-            stop = true;
-            System.out.println("Stopping server");
-            try {
-                mainThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
