@@ -1,40 +1,66 @@
 package Server;
 
 import IO.MyCompressorOutputStream;
-import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.MyMazeGenerator;
+import algorithms.mazeGenerators.*;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Properties;
+
 
 public class ServerStrategyGenerateMaze implements IServerStrategy {
+
+    private ObjectInputStream fromClient;
+    private ObjectOutputStream toClient;
+    private int[] mazeDetails;
+    private int rows;
+    private int cols;
+    private Maze maze;
+    private byte[] mazeBytesArray;
+    private OutputStream bOut;
+    private MyCompressorOutputStream compressMaze;
+
+    public ServerStrategyGenerateMaze() {
+
+        fromClient = null;
+        toClient = null;
+        mazeDetails = null;
+        rows = 0;
+        cols = 0;
+        maze = null;
+        mazeBytesArray = null;
+        bOut = null;
+        compressMaze = null;
+
+    }
+
 
     @Override
     public void serverStrategy(InputStream inFromClient, OutputStream outToClient) {
 
         try {
-            ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
-            ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
+            fromClient = new ObjectInputStream(inFromClient);
+            toClient = new ObjectOutputStream(outToClient);
+            toClient.flush();
 
-            int[] mazeSize = (int[]) fromClient.readObject();
-            int rows = mazeSize[0];
-            int cols = mazeSize[1];
-            Maze maze = (new MyMazeGenerator()).generate(rows/*rows*/, cols/*columns*/);
-            byte[] mazeBytesArray = maze.toByteArray();
-            OutputStream bOut = new ByteArrayOutputStream();
-            MyCompressorOutputStream compressMaze = new MyCompressorOutputStream(bOut);
+            mazeDetails = (int[]) fromClient.readObject();
+            rows = mazeDetails[0];
+            cols = mazeDetails[1];
+
+            IMazeGenerator mazeGenerator = getMazeGenerator();
+            maze = (mazeGenerator.generate(rows/*rows*/, cols/*columns*/));
+            //Generates a new Maze according to the values given from the user
+
+            mazeBytesArray = maze.toByteArray();
+            bOut = new ByteArrayOutputStream();
+            compressMaze = new MyCompressorOutputStream(bOut);
             bOut.flush();
             bOut.close();
-            //  MyCompressorOutputStream compressMaze = new MyCompressorOutputStream(new FileOutputStream("tempFile"));
             compressMaze.write(mazeBytesArray);
-            //FileInputStream inFile = new FileInputStream("tempFile");
-            byte[] mazeRepresentation = new byte[((ByteArrayOutputStream) bOut).size()];
-            InputStream bIn = new ByteArrayInputStream(((ByteArrayOutputStream) bOut).toByteArray());
-            bIn.read(mazeRepresentation);
+            //Compresses the maze and writes it in the ByteArrayOutputStream
 
-            // byte[] mazeRepresentation = new byte[mazeBytesArray.length * 2];
-            //  inFile.read(mazeRepresentation);
-            toClient.writeObject(mazeRepresentation);
+            toClient.writeObject(((ByteArrayOutputStream) bOut).toByteArray());
+            //Writes the data from bOut to the client OutputStream
             toClient.flush();
             toClient.close();
 
@@ -43,7 +69,16 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
-
+    private IMazeGenerator getMazeGenerator() {
+        if (Objects.equals(Configurations.getMazeGenerator(), "MyMazeGenerator")) {
+            return new MyMazeGenerator();
+        } else if (Objects.equals(Configurations.getMazeGenerator(), "SimpleMazeGenerator")) {
+            return new SimpleMazeGenerator();
+        } else if (Objects.equals(Configurations.getMazeGenerator(), "EmptyMazeGenerator")) {
+            return new EmptyMazeGenerator();
+        } else return new EmptyMazeGenerator();//default option
+    }
 }

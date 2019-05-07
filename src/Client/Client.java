@@ -18,6 +18,7 @@ public class Client{
     public void communicateWithServer() {
 
         try {
+
             Socket theServer = new Socket(serverIP, serverPort);
 
             clientStrategy.clientStrategy(theServer.getInputStream(), theServer.getOutputStream());

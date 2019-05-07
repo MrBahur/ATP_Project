@@ -6,6 +6,7 @@ import Server.ServerStrategyGenerateMaze;
 import Server.ServerStrategySolveSearchProblem;
 import algorithms.mazeGenerators.Maze;
 import algorithms.mazeGenerators.MyMazeGenerator;
+import algorithms.mazeGenerators.SimpleMazeGenerator;
 import algorithms.search.AState;
 import algorithms.search.Solution;
 import Server.Server;
@@ -17,25 +18,63 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class RunCommunicateWithServers {
+
     public static void main(String[] args) {
 //Initializing servers
         Server mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
-        //Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
+        Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
         //Server stringReverserServer = new Server(5402, 1000, new ServerStrategyStringReverser());
 //Starting servers
-       //solveSearchProblemServer.start();
-       mazeGeneratingServer.start();
+        solveSearchProblemServer.start();
+
+        mazeGeneratingServer.start();
 //stringReverserServer.start();
 //Communicating with servers
-        CommunicateWithServer_MazeGenerating();
-     //CommunicateWithServer_SolveSearchProblem();
+        for (int i = 0; i < 6; i++) {
+            Thread t = new Thread1();
+            t.start();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+//        CommunicateWithServer_MazeGenerating();
+//        CommunicateWithServer_MazeGenerating();
+//        CommunicateWithServer_MazeGenerating();
+//        CommunicateWithServer_MazeGenerating();
+//        CommunicateWithServer_MazeGenerating();
+//        CommunicateWithServer_MazeGenerating();
+
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+
+
 //CommunicateWithServer_StringReverser();
 //Stopping all servers
         mazeGeneratingServer.stop();
-      //solveSearchProblemServer.stop();
+        solveSearchProblemServer.stop();
 //stringReverserServer.stop();
     }
 
+
+}
+
+class Thread1 extends Thread {
+    public void run() {
+        System.out.println("------------------------------  " + Thread.currentThread().getId());
+        CommunicateWithServer_MazeGenerating();
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        CommunicateWithServer_SolveSearchProblem();
+    }
     private static void CommunicateWithServer_MazeGenerating() {
 
         try {
@@ -50,7 +89,7 @@ public class RunCommunicateWithServers {
                         ObjectInputStream fromServer = new
                                 ObjectInputStream(inFromServer);
                         toServer.flush();
-                        int[] mazeDimensions = new int[]{1000, 1000};
+                        int[] mazeDimensions = new int[]{10, 10};
                         toServer.writeObject(mazeDimensions); //send maze dimensions to server
                         toServer.flush();
                         byte[] compressedMaze = (byte[])
@@ -87,29 +126,28 @@ public class RunCommunicateWithServers {
                                 ObjectInputStream fromServer = new
                                         ObjectInputStream(inFromServer);
                                 toServer.flush();
-                                MyMazeGenerator mg = new MyMazeGenerator();
-                                Maze maze = mg.generate(10, 10);
+
+//                                MyMazeGenerator mg = new MyMazeGenerator();
+//                                Maze maze = mg.generate(50, 50);
 
 
+                                byte savedMazeBytes[] = new byte[10000000];
+                                try {
+//read maze from file
+                                    InputStream in = new MyDecompressorInputStream(new
+                                            FileInputStream(
+                                            "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/0"
+                                    ));
+                                    //  savedMazeBytes = new byte[maze.toByteArray().length];
+                                    in.read(savedMazeBytes);
+                                    in.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                Maze maze = new Maze(savedMazeBytes);
 
 //
-//                                byte savedMazeBytes[] = new byte[20];
-//                                try {
-////read maze from file
-//                                    InputStream in = new MyDecompressorInputStream(new
-//                                            FileInputStream(
-//                                                    "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/76"
-//                                    ));
-//                                  //  savedMazeBytes = new byte[maze.toByteArray().length];
-//                                    in.read(savedMazeBytes);
-//                                    in.close();
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                Maze maze = new Maze(savedMazeBytes);
-
-
-                                //maze.print();
+//                                maze.print();
 //                                System.out.println(maze.toByteArray().length);
 //                                byte[] b = maze.toByteArray();
 //                                for (int i=0;i<b.length;i++){
@@ -140,6 +178,7 @@ public class RunCommunicateWithServers {
             e.printStackTrace();
         }
     }
+}
 
 //    private static void CommunicateWithServer_StringReverser() {
 //        try {
@@ -171,4 +210,3 @@ public class RunCommunicateWithServers {
 //            e.printStackTrace();
 //        }
 //    }
-}
