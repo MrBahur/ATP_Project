@@ -31,19 +31,19 @@ public class RunCommunicateWithServers {
 //stringReverserServer.start();
 //Communicating with servers
 
-        CommunicateWithServer_MazeGenerating();
+//        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
 
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
         CommunicateWithServer_SolveSearchProblem();
-//        CommunicateWithServer_SolveSearchProblem();
-//        CommunicateWithServer_SolveSearchProblem();
-//        CommunicateWithServer_SolveSearchProblem();
-//        CommunicateWithServer_SolveSearchProblem();
-//        CommunicateWithServer_SolveSearchProblem();
+        CommunicateWithServer_SolveSearchProblem();
 
 
 //CommunicateWithServer_StringReverser();
@@ -104,28 +104,27 @@ public class RunCommunicateWithServers {
                                 ObjectInputStream fromServer = new
                                         ObjectInputStream(inFromServer);
                                 toServer.flush();
-                                SimpleMazeGenerator mg = new SimpleMazeGenerator();
 
-                              //  MyMazeGenerator mg = new MyMazeGenerator();
-                                Maze maze = mg.generate(1000, 1000);
-
+//                                MyMazeGenerator mg = new MyMazeGenerator();
+//                                Maze maze = mg.generate(50, 50);
 
 
-//
-//                                byte savedMazeBytes[] = new byte[20];
-//                                try {
-////read maze from file
-//                                    InputStream in = new MyDecompressorInputStream(new
-//                                            FileInputStream(
-//                                                    "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/76"
-//                                    ));
-//                                  //  savedMazeBytes = new byte[maze.toByteArray().length];
-//                                    in.read(savedMazeBytes);
-//                                    in.close();
-//                                } catch (IOException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                Maze maze = new Maze(savedMazeBytes);
+
+
+                                byte savedMazeBytes[] = new byte[162000];
+                                try {
+//read maze from file
+                                    InputStream in = new MyDecompressorInputStream(new
+                                            FileInputStream(
+                                                    "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/3"
+                                    ));
+                                  //  savedMazeBytes = new byte[maze.toByteArray().length];
+                                    in.read(savedMazeBytes);
+                                    in.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                Maze maze = new Maze(savedMazeBytes);
 
 
                                 //maze.print();
