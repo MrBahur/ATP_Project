@@ -4,6 +4,7 @@ import IO.MyCompressorOutputStream;
 import algorithms.mazeGenerators.*;
 
 import java.io.*;
+import java.util.Objects;
 import java.util.Properties;
 
 
@@ -33,34 +34,6 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
 
     }
 
-    //TODO change the maze generator according to the configuration file
-    //TODO change the path of the configuration file
-    private AMazeGenerator getMazeGenerator(){
-
-        AMazeGenerator mazeGenerator = null;
-
-        try (InputStream input = new FileInputStream("/Users/Danielle/IdeaProjects/ATP_Project/resources/config.properties")) {
-
-            Properties prop = new Properties();
-
-            // load a properties file
-            prop.load(input);
-
-            String mazeGeneratorName = prop.getProperty("MazeGenerator");
-
-            if (mazeGeneratorName.equals("MyMazeGenerator")) {
-                mazeGenerator = new MyMazeGenerator();
-            } else if (mazeGeneratorName.equals("SimpleMazeGenerator")) {
-                mazeGenerator = new SimpleMazeGenerator();
-            } else { //mazeGeneratorName.equals("EmptyMazeGenerator")
-                mazeGenerator = new EmptyMazeGenerator();
-            }
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return mazeGenerator;
-    }
 
     @Override
     public void serverStrategy(InputStream inFromClient, OutputStream outToClient) {
@@ -74,7 +47,7 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
             rows = mazeDetails[0];
             cols = mazeDetails[1];
 
-            AMazeGenerator mazeGenerator = getMazeGenerator();
+            IMazeGenerator mazeGenerator = getMazeGenerator();
             maze = (mazeGenerator.generate(rows/*rows*/, cols/*columns*/));
             //Generates a new Maze according to the values given from the user
 
@@ -88,12 +61,24 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
 
             toClient.writeObject(((ByteArrayOutputStream) bOut).toByteArray());
             //Writes the data from bOut to the client OutputStream
-
+            toClient.flush();
+            toClient.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+    }
+
+    private IMazeGenerator getMazeGenerator() {
+        if (Objects.equals(Configurations.getMazeGenerator(), "MyMazeGenerator")) {
+            return new MyMazeGenerator();
+        } else if (Objects.equals(Configurations.getMazeGenerator(), "SimpleMazeGenerator")) {
+            return new SimpleMazeGenerator();
+        } else if (Objects.equals(Configurations.getMazeGenerator(), "EmptyMazeGenerator")) {
+            return new EmptyMazeGenerator();
+        } else return new EmptyMazeGenerator();//default option
     }
 }

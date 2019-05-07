@@ -6,6 +6,7 @@ import algorithms.search.*;
 
 import java.io.*;
 
+import java.util.Objects;
 import java.util.Properties;
 
 public class ServerStrategySolveSearchProblem implements IServerStrategy {
@@ -69,6 +70,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
             toClient.writeObject(solutionToClient);
             //Sends the solution to the client
+            toClient.flush();
+            toClient.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,34 +137,6 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     }
 
 
-    //TODO change the searching algorithm according to the configuration file
-    //TODO change the path of the configuration file
-    private ASearchingAlgorithm getSearchingAlgorithm() {
-
-        ASearchingAlgorithm searchingAlgorithm = null;
-
-        try (InputStream input = new FileInputStream("/Users/Danielle/IdeaProjects/ATP_Project/resources/config.properties")) {
-
-            Properties prop = new Properties();
-
-            // load a properties file
-            prop.load(input);
-
-
-            String searchingAlgorithmName = prop.getProperty("searchingAlgorithm");
-            if (searchingAlgorithmName.equals("Depth First Search")) {
-                searchingAlgorithm = new DepthFirstSearch();
-            } else if (searchingAlgorithmName.equals("Breadth First Search")) {
-                searchingAlgorithm = new BreadthFirstSearch();
-            } else { //searchingAlgorithmName.equals("Best First Search")
-                searchingAlgorithm = new BestFirstSearch();
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return searchingAlgorithm;
-    }
 
 
     /**
@@ -228,6 +203,17 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         }
         return mazeIndex;
     }
+
+    private ASearchingAlgorithm getSearchingAlgorithm() {
+        if (Objects.equals(Configurations.getSearchingAlgorithm(), "BestFirstSearch")) {
+            return new BestFirstSearch();
+        } else if (Objects.equals(Configurations.getSearchingAlgorithm(), "DepthFirstSearch")) {
+            return new DepthFirstSearch();
+        } else if (Objects.equals(Configurations.getSearchingAlgorithm(), "BreadthFirstSearch")) {
+            return new BreadthFirstSearch();
+        } else return new BestFirstSearch();//default case
+    }
+
 
 }
 

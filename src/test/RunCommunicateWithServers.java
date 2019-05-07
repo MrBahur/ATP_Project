@@ -25,12 +25,20 @@ public class RunCommunicateWithServers {
         Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
         //Server stringReverserServer = new Server(5402, 1000, new ServerStrategyStringReverser());
 //Starting servers
-       solveSearchProblemServer.start();
+        solveSearchProblemServer.start();
 
-         mazeGeneratingServer.start();
+        mazeGeneratingServer.start();
 //stringReverserServer.start();
 //Communicating with servers
-
+        for (int i = 0; i < 6; i++) {
+            Thread t = new Thread1();
+            t.start();
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
 //        CommunicateWithServer_MazeGenerating();
@@ -42,17 +50,31 @@ public class RunCommunicateWithServers {
 //        CommunicateWithServer_SolveSearchProblem();
 //        CommunicateWithServer_SolveSearchProblem();
 //        CommunicateWithServer_SolveSearchProblem();
-        CommunicateWithServer_SolveSearchProblem();
-        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
+//        CommunicateWithServer_SolveSearchProblem();
 
 
 //CommunicateWithServer_StringReverser();
 //Stopping all servers
         mazeGeneratingServer.stop();
-     solveSearchProblemServer.stop();
+        solveSearchProblemServer.stop();
 //stringReverserServer.stop();
     }
 
+
+}
+
+class Thread1 extends Thread {
+    public void run() {
+        System.out.println("------------------------------  " + Thread.currentThread().getId());
+        CommunicateWithServer_MazeGenerating();
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        CommunicateWithServer_SolveSearchProblem();
+    }
     private static void CommunicateWithServer_MazeGenerating() {
 
         try {
@@ -109,16 +131,14 @@ public class RunCommunicateWithServers {
 //                                Maze maze = mg.generate(50, 50);
 
 
-
-
                                 byte savedMazeBytes[] = new byte[10000000];
                                 try {
 //read maze from file
                                     InputStream in = new MyDecompressorInputStream(new
                                             FileInputStream(
-                                                    "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/0"
+                                            "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/0"
                                     ));
-                                  //  savedMazeBytes = new byte[maze.toByteArray().length];
+                                    //  savedMazeBytes = new byte[maze.toByteArray().length];
                                     in.read(savedMazeBytes);
                                     in.close();
                                 } catch (IOException e) {
@@ -158,6 +178,7 @@ public class RunCommunicateWithServers {
             e.printStackTrace();
         }
     }
+}
 
 //    private static void CommunicateWithServer_StringReverser() {
 //        try {
@@ -189,4 +210,3 @@ public class RunCommunicateWithServers {
 //            e.printStackTrace();
 //        }
 //    }
-}

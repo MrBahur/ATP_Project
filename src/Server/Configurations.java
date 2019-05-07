@@ -1,33 +1,109 @@
 package Server;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Properties;
 
 public class Configurations {
 
     public static void main(String[] args) {
 
-        //TODO change the path of the configuration file
-        try (OutputStream output = new FileOutputStream("/Users/Danielle/IdeaProjects/ATP_Project/resources/config.properties")) {
-
-            Properties prop = new Properties();
-
-            //TODO how does the user inserts the values?
-            // set the properties value
-            prop.setProperty("numOfThreads", "5");
-            prop.setProperty("searchingAlgorithm", "Depth First Search");
-            prop.setProperty("MazeGenerator", "MyMazeGenerator");
-
-            // save properties to project root folder
-            prop.store(output, null);
-
-
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-
+        System.out.println(getMazeGenerator());
+        System.out.println(getNumOfThreads());
+        System.out.println(getSearchingAlgorithm());
     }
 
+    public static void setNumOfThreads(int num) {
+        try {
+            Properties p = new Properties();
+            p.load(new FileInputStream("./resources/config.properties"));
+
+            OutputStream out = new FileOutputStream("./resources/config.properties");
+
+            p.setProperty("numOfThreads", Integer.toString(num));
+
+            p.store(out, null);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setSearchingAlgorithm(String searchingAlgorithm) {
+        try {
+            Properties p = new Properties();
+            p.load(new FileInputStream("./resources/config.properties"));
+
+            OutputStream out = new FileOutputStream("./resources/config.properties");
+
+            p.setProperty("searchingAlgorithm", searchingAlgorithm);
+
+            p.store(out, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setMazeGenerator(String mazeGenerator) {
+        try {
+            Properties p = new Properties();
+            p.load(new FileInputStream("./resources/config.properties"));
+
+            OutputStream out = new FileOutputStream("./resources/config.properties");
+
+            p.setProperty("MazeGenerator", mazeGenerator);
+
+            p.store(out, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getNumOfThreads() {
+        try (InputStream input = new FileInputStream("./resources/config.properties")) {
+
+            Properties p = new Properties();
+
+            p.load(input);
+
+            int numOfThreads;
+            try {
+                numOfThreads = Integer.parseInt(p.getProperty("numOfThreads"));
+            } catch (NumberFormatException e) {
+                numOfThreads = 1;
+            }
+            return numOfThreads;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+    public static String getSearchingAlgorithm() {
+        try (InputStream input = new FileInputStream("./resources/config.properties")) {
+
+            Properties p = new Properties();
+
+            p.load(input);
+
+            return p.getProperty("searchingAlgorithm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getMazeGenerator() {
+        try (InputStream input = new FileInputStream("./resources/config.properties")) {
+
+            Properties p = new Properties();
+
+            p.load(input);
+
+            return p.getProperty("MazeGenerator");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
