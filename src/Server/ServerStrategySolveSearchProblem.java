@@ -44,7 +44,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
             ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
-            toClient.flush();
+
             Maze mazeToSolve = (Maze) fromClient.readObject();
             Solution solutionToClient = null;
 
@@ -61,8 +61,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
             toClient.writeObject(solutionToClient);
             //Sends the solution to the client
-           // toClient.flush();
-           // toClient.close();
+            toClient.flush();
+            toClient.close();
 
         } catch (IOException e) {
             e.printStackTrace();

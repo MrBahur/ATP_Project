@@ -44,6 +44,11 @@ public class Solution implements Serializable {
         } catch (IOException | ClassNotFoundException e) {
             //e.printStackTrace();
         }
+    }
 
+    @Override
+    public String toString() {
+        String s = solution.toString();
+        return s;
     }
 }
