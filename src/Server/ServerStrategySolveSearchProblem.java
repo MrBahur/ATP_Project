@@ -1,12 +1,10 @@
 package Server;
 
 import algorithms.mazeGenerators.Maze;
-import algorithms.search.ASearchingAlgorithm;
-import algorithms.search.BestFirstSearch;
-import algorithms.search.SearchableMaze;
-import algorithms.search.Solution;
+import algorithms.search.*;
 
 import java.io.*;
+import java.util.Objects;
 
 public class ServerStrategySolveSearchProblem implements IServerStrategy {
     @Override
@@ -20,7 +18,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             if (isSolutionExist(m)) {
 
             } else {
-                ASearchingAlgorithm searcher = new BestFirstSearch();
+                ASearchingAlgorithm searcher = getSearchingAlgorithm();
                 Solution s = searcher.solve(new SearchableMaze(m));
                 toClient.writeObject(s);
                 //write the solution
@@ -35,5 +33,15 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
     private boolean isSolutionExist(Maze m) {
         return false;
+    }
+
+    private ASearchingAlgorithm getSearchingAlgorithm() {
+        if (Objects.equals(Configurations.getSearchingAlgorithm(), "BestFirstSearch")) {
+            return new BestFirstSearch();
+        } else if (Objects.equals(Configurations.getSearchingAlgorithm(), "DepthFirstSearch")) {
+            return new DepthFirstSearch();
+        } else if (Objects.equals(Configurations.getSearchingAlgorithm(), "BreadthFirstSearch")) {
+            return new BreadthFirstSearch();
+        } else return new BestFirstSearch();//default case
     }
 }

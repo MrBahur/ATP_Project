@@ -25,8 +25,8 @@ public class Server {
         this.serverStrategy = serverStrategy;
         mainThread = new Thread(this::runServer);
         executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        executor.setCorePoolSize(10);
-        executor.setMaximumPoolSize(10);
+        executor.setCorePoolSize(Configurations.getNumOfThreads());
+        executor.setMaximumPoolSize(Configurations.getNumOfThreads());
     }
 
     public void start() {
@@ -67,6 +67,7 @@ public class Server {
                     });
                 } catch (SocketTimeoutException e) {
                     //e.printStackTrace();
+                    //System.out.println("waiting for clients");
                 }
             }
         } catch (IOException e) {
