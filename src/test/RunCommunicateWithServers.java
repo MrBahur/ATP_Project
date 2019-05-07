@@ -111,12 +111,12 @@ public class RunCommunicateWithServers {
 
 
 
-                                byte savedMazeBytes[] = new byte[162000];
+                                byte savedMazeBytes[] = new byte[10000000];
                                 try {
 //read maze from file
                                     InputStream in = new MyDecompressorInputStream(new
                                             FileInputStream(
-                                                    "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/3"
+                                                    "/var/folders/z2/9qc4yb157nx_l5rd4bxt7sk40000gn/T/tempDir/Mazes/0"
                                     ));
                                   //  savedMazeBytes = new byte[maze.toByteArray().length];
                                     in.read(savedMazeBytes);
@@ -126,8 +126,8 @@ public class RunCommunicateWithServers {
                                 }
                                 Maze maze = new Maze(savedMazeBytes);
 
-
-                                //maze.print();
+//
+//                                maze.print();
 //                                System.out.println(maze.toByteArray().length);
 //                                byte[] b = maze.toByteArray();
 //                                for (int i=0;i<b.length;i++){

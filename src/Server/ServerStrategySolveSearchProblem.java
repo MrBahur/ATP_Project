@@ -38,8 +38,103 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         numOfMazes = 0;
     }
 
-    //TODO change the searching algorithm according to the configuration file
 
+    /**
+     * Gets a maze from the client, solves it and sends the solution to the client.
+     * All the given mazes and their solutions are kept in a temporary directory, and
+     * if the given maze already exist in the directory, its solution is being pulled and sent to client.
+     *
+     * @param inFromClient The client's input stream
+     * @param outToClient  The client's output stream
+     */
+    @Override
+    public void serverStrategy(InputStream inFromClient, OutputStream outToClient) {
+
+        try {
+
+            fromClient = new ObjectInputStream(inFromClient);
+            toClient = new ObjectOutputStream(outToClient);
+            mazeToSolve = (Maze) fromClient.readObject();
+
+            int mazeIndex = findMaze(); //Returns -1 if maze does not exist in the mazes directory
+
+            if (mazeIndex != -1) { //This maze was already solved and its solution is saved in the solutions directory
+
+                loadSolution(mazeIndex);
+
+            } else { //The maze is being solved for the first time
+
+                solutionToClient = solveMaze();
+            }
+
+            toClient.writeObject(solutionToClient);
+            //Sends the solution to the client
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /** Finds the solution of the maze from the solutions directory.
+     *
+     * @param mazeIndex The index of the maze which represents its name in the mazes directory.
+     */
+    private void loadSolution(int mazeIndex) {
+        try {
+            ObjectInputStream solutionFile =
+                    new ObjectInputStream(new FileInputStream(solutionsDir.getPath() + "/" + mazeIndex));
+            solutionToClient = (Solution) solutionFile.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** Solves the new maze and adds it and its solution to the temporary directory.
+     *
+     * @return the solution of the maze.
+     */
+    private Solution solveMaze() {
+
+        solutionToClient = null;
+
+        try {
+            OutputStream addMaze =
+                    new FileOutputStream(mazesDir.getPath() + "/" + numOfMazes);
+            MyCompressorOutputStream compressedMaze = new MyCompressorOutputStream(addMaze);
+            compressedMaze.write(mazeToSolve.toByteArray());
+            //Adds the compressed maze to the mazes directory
+
+            addMaze.flush();
+            addMaze.close();
+
+            ObjectOutputStream addSolution =
+                    new ObjectOutputStream(new FileOutputStream(solutionsDir.getPath() + "/" + numOfMazes));
+
+            SearchableMaze searchableMaze = new SearchableMaze(mazeToSolve);
+
+            ASearchingAlgorithm searchingAlgorithm = getSearchingAlgorithm();
+            //Gets the searching algorithm from the configuration file
+            solutionToClient = searchingAlgorithm.solve(searchableMaze);
+
+            addSolution.writeObject(solutionToClient);
+            //Adds a solution to the solutions directory
+            addSolution.flush();
+            addSolution.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return solutionToClient;
+    }
+
+
+    //TODO change the searching algorithm according to the configuration file
     //TODO change the path of the configuration file
     private ASearchingAlgorithm getSearchingAlgorithm() {
 
@@ -68,74 +163,9 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         return searchingAlgorithm;
     }
 
-    /** Gets a maze from the client, solves it and sends the solution to the client.
-     * All the given mazes and their solutions are kept in a temporary directory, and
-     * if the given maze already exist in the directory, its solution is being pulled and sent to client.
-     *
-     * @param inFromClient The client's input stream
-     * @param outToClient The client's output stream
-     */
-    @Override
-    public void serverStrategy(InputStream inFromClient, OutputStream outToClient) {
 
-        try {
-            fromClient = new ObjectInputStream(inFromClient);
-            toClient = new ObjectOutputStream(outToClient);
-
-            mazeToSolve = (Maze) fromClient.readObject();
-            solutionToClient = null;
-
-            int mazeIndex = findMaze(); //Returns -1 if maze does not exist in the mazes directory
-
-            if (mazeIndex != -1) { //This maze was already solved and its solution is saved in the solutions directory
-
-                ObjectInputStream solutionFile =
-                        new ObjectInputStream(new FileInputStream(solutionsDir.getPath() + "/" + mazeIndex));
-                solutionToClient = (Solution) solutionFile.readObject();
-
-            } else { //The maze is being solved for the first time
-
-                try {
-                    OutputStream addMaze =
-                            new FileOutputStream(mazesDir.getPath() + "/" + numOfMazes);
-                    MyCompressorOutputStream compressedMaze = new MyCompressorOutputStream(addMaze);
-                    compressedMaze.write(mazeToSolve.toByteArray());
-                    //Adds the compressed maze to the mazes directory
-
-                    addMaze.flush();
-                    addMaze.close();
-
-                    ObjectOutputStream addSolution =
-                            new ObjectOutputStream(new FileOutputStream(solutionsDir.getPath() + "/" + numOfMazes));
-
-                    SearchableMaze searchableMaze = new SearchableMaze(mazeToSolve);
-
-                    ASearchingAlgorithm searchingAlgorithm = getSearchingAlgorithm();
-                    //Gets the searching algorithm from the configuration file
-                    solutionToClient = searchingAlgorithm.solve(searchableMaze);
-
-                    addSolution.writeObject(solutionToClient);
-                    //Adds a solution to the solutions directory
-                    addSolution.flush();
-                    addSolution.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            toClient.writeObject(solutionToClient);
-            //Sends the solution to the client
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /** Compares the compressed given maze to the rest of the compressed mazes in the temporary directory
+    /**
+     * Compares the compressed given maze to the rest of the compressed mazes in the temporary directory
      *
      * @return The index of the maze which represents the name of the maze in the temporary directory.
      * If the maze does not exist in the directory, returns -1.
@@ -150,7 +180,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             //rest of the compressed mazes in the mazes directory
             out.flush();
             out.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
