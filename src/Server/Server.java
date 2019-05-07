@@ -31,19 +31,19 @@ public class Server {
 
     public void start() {
         mainThread.start();
-        new Thread(() -> {
-            Scanner s = new Scanner(System.in);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            do {
-                System.out.print(">>");
-            } while (!Objects.equals(s.next().toLowerCase(), "exit"));
-            stop = true;
-            stop();
-        }).start();
+//        new Thread(() -> {
+//            Scanner s = new Scanner(System.in);
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            do {
+//                System.out.print(">>");
+//            } while (!Objects.equals(s.next().toLowerCase(), "exit"));
+//            stop = true;
+//            stop();
+//        }).start();
     }
 
     private void runServer() {
@@ -77,14 +77,13 @@ public class Server {
     }
 
     public void stop() {
-        if (executor.getActiveCount() == 0 && stop) {
             executor.shutdown();
+            stop = true;
             System.out.println("Stopping server");
             try {
                 mainThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
         }
     }
 }
