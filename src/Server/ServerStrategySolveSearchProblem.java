@@ -3,6 +3,7 @@ package Server;
 import IO.MyCompressorOutputStream;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.*;
+
 import java.io.*;
 import java.util.Objects;
 
@@ -20,11 +21,14 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
         tempDirectoryPath = System.getProperty("java.io.tmpdir");
         tempDirectory = new File(tempDirectoryPath, "tempDir");
-        tempDirectory.mkdir();
+        boolean tempDCreated = tempDirectory.mkdir();
         mazesDir = new File(tempDirectory.getPath(), "Mazes");
-        mazesDir.mkdir();
+        boolean mazesDCreated = mazesDir.mkdir();
         solutionsDir = new File(tempDirectory.getPath(), "Solutions");
-        solutionsDir.mkdir();
+        boolean solutionsDCreated = solutionsDir.mkdir();
+        if (!tempDCreated || !mazesDCreated || !solutionsDCreated) {
+            System.out.println("There was a problem creating the directory");
+        }
         numOfMazes = 0;
     }
 
@@ -56,7 +60,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
             } else { //The maze is being solved for the first time
 
-                 solutionToClient = solveMaze(mazeToSolve);
+                solutionToClient = solveMaze(mazeToSolve);
             }
 
             toClient.writeObject(solutionToClient);
@@ -70,7 +74,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
     }
 
-    /** Finds the solution of the maze from the solutions directory.
+    /**
+     * Finds the solution of the maze from the solutions directory.
      *
      * @param mazeIndex The index of the maze which represents its name in the mazes directory.
      */
@@ -87,7 +92,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         return solutionToClient;
     }
 
-    /** Solves the new maze and adds it and its solution to the temporary directory.
+    /**
+     * Solves the new maze and adds it and its solution to the temporary directory.
      *
      * @return the solution of the maze.
      */
@@ -125,8 +131,6 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
         return solutionToClient;
     }
-
-
 
 
     /**
@@ -197,6 +201,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
     /**
      * small factory like method to return the required Searching Algorithm
+     *
      * @return Searching algorithm of some kind
      */
     private ASearchingAlgorithm getSearchingAlgorithm() {

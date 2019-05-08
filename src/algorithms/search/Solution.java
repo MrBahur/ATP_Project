@@ -50,4 +50,11 @@ public class Solution implements Serializable {
     public String toString() {
         return solution.toString();
     }
+
+//    @Override
+//    public String toString() {
+//        return "Solution{" +
+//                "solution=" + solution +
+//                '}';
+//    }
 }
