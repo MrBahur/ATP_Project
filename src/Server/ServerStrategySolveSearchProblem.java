@@ -3,11 +3,8 @@ package Server;
 import IO.MyCompressorOutputStream;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.*;
-
 import java.io.*;
-
 import java.util.Objects;
-import java.util.Properties;
 
 public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
@@ -15,10 +12,6 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     private File tempDirectory;
     private File mazesDir;
     private File solutionsDir;
-    private Maze mazeToSolve;
-    private ObjectInputStream fromClient;
-    private ObjectOutputStream toClient;
-    private Solution solutionToClient;
     int numOfMazes;
 
 
@@ -32,10 +25,6 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         mazesDir.mkdir();
         solutionsDir = new File(tempDirectory.getPath(), "Solutions");
         solutionsDir.mkdir();
-        mazeToSolve = null;
-        fromClient = null;
-        toClient = null;
-        solutionToClient = null;
         numOfMazes = 0;
     }
 
@@ -53,19 +42,21 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
 
         try {
 
-            fromClient = new ObjectInputStream(inFromClient);
-            toClient = new ObjectOutputStream(outToClient);
-            mazeToSolve = (Maze) fromClient.readObject();
+            ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
+            ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
 
-            int mazeIndex = findMaze(); //Returns -1 if maze does not exist in the mazes directory
+            Maze mazeToSolve = (Maze) fromClient.readObject();
+            Solution solutionToClient = null;
+
+            int mazeIndex = findMaze(mazeToSolve); //Returns -1 if maze does not exist in the mazes directory
 
             if (mazeIndex != -1) { //This maze was already solved and its solution is saved in the solutions directory
 
-                loadSolution(mazeIndex);
+                solutionToClient = loadSolution(mazeIndex);
 
             } else { //The maze is being solved for the first time
 
-                solutionToClient = solveMaze();
+                 solutionToClient = solveMaze(mazeToSolve);
             }
 
             toClient.writeObject(solutionToClient);
@@ -85,7 +76,9 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
      *
      * @param mazeIndex The index of the maze which represents its name in the mazes directory.
      */
-    private void loadSolution(int mazeIndex) {
+    private synchronized Solution loadSolution(int mazeIndex) {
+
+        Solution solutionToClient = null;
         try {
             ObjectInputStream solutionFile =
                     new ObjectInputStream(new FileInputStream(solutionsDir.getPath() + "/" + mazeIndex));
@@ -95,15 +88,16 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         }catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return solutionToClient;
     }
 
     /** Solves the new maze and adds it and its solution to the temporary directory.
      *
      * @return the solution of the maze.
      */
-    private Solution solveMaze() {
+    private synchronized Solution solveMaze(Maze mazeToSolve) {
 
-        solutionToClient = null;
+        Solution solutionToClient = null;
 
         try {
             OutputStream addMaze =
@@ -145,7 +139,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
      * @return The index of the maze which represents the name of the maze in the temporary directory.
      * If the maze does not exist in the directory, returns -1.
      */
-    private int findMaze() {
+    private synchronized int findMaze(Maze mazeToSolve) {
 
         try {
             FileOutputStream out = new FileOutputStream(tempDirectory.getPath() + "/mazeToSolve");
