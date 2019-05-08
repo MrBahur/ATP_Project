@@ -23,9 +23,12 @@ public class Server {
         this.listeningIntervalMS = listeningIntervalMS;
         this.serverStrategy = serverStrategy;
         mainThread = new Thread(this::runServer);
-        executor = new ThreadPoolExecutor(Configurations.getNumOfThreads(), Configurations.getNumOfThreads(), 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        executor = new ThreadPoolExecutor(Configurations.getNumOfThreads(), Configurations.getNumOfThreads(), 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     }
 
+    /**
+     * the start method for the server
+     */
     public void start() {
         mainThread.start();
 //        new Thread(() -> {
@@ -43,6 +46,9 @@ public class Server {
 //        }).start();
     }
 
+    /**
+     * the run server method
+     */
     private void runServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
@@ -74,6 +80,9 @@ public class Server {
 
     }
 
+    /**
+     * method to stop the server
+     */
     public void stop() {
         stop = true;
 

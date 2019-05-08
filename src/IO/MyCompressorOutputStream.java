@@ -80,11 +80,11 @@ public class MyCompressorOutputStream extends OutputStream {
         resultPairs = new ArrayList<>();
         currentPatternIndex = 1;
         numOfBytesForIndex = 1;
-        ArrayList<Byte> newPattern = null;
+        ArrayList<Byte> newPattern;
         bSize = b.length;
 
-        if (b == null) {
-            throw new NullPointerException();
+        if (b.length == 0) {
+            throw new IllegalArgumentException();
         } else {
             dictionary.put(null, new Pair<>(0, 0)); //The first pattern (default)
             int i = 0;

@@ -46,7 +46,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
 
             Maze mazeToSolve = (Maze) fromClient.readObject();
-            Solution solutionToClient = null;
+            Solution solutionToClient;
 
             int mazeIndex = findMaze(mazeToSolve); //Returns -1 if maze does not exist in the mazes directory
 
@@ -153,7 +153,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         int mazeIndex = -1;
         boolean areEqual;
         File[] mazesDirContent = mazesDir.listFiles();
-        File mazeFile = null;
+        File mazeFile;
 
         assert mazesDirContent != null;
         numOfMazes = mazesDirContent.length;
@@ -165,8 +165,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             try {
                 BufferedReader br1 = new BufferedReader(new FileReader(tempDirectory.getPath() + "/mazeToSolve"));
                 BufferedReader br2 = new BufferedReader(new FileReader(mazesDir.getPath() + "/" + i));
-                String line1 = null;
-                String line2 = null;
+                String line1;
+                String line2;
 
                 while (((line1 = br1.readLine()) != null) | ((line2 = br2.readLine()) != null)) {
                     if ((line1 == null) || (line2 == null)) {
@@ -187,7 +187,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
                 try {
                     mazeIndex = Integer.parseInt(mazeFile.getName());
                 } catch (NumberFormatException e) {
-                    mazeIndex = -1;
+                    //e.printStackTrace();
                 }
                 break;
             }
@@ -195,6 +195,10 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         return mazeIndex;
     }
 
+    /**
+     * small factory like method to return the required Searching Algorithm
+     * @return Searching algorithm of some kind
+     */
     private ASearchingAlgorithm getSearchingAlgorithm() {
         if (Objects.equals(Configurations.getSearchingAlgorithm(), "BestFirstSearch")) {
             return new BestFirstSearch();

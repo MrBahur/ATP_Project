@@ -30,6 +30,10 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
         }
     }
 
+    /**
+     * small factory like method to return the required mazeGenerator
+     * @return mazeGenerator of some kind
+     */
     private IMazeGenerator getMazeGenerator() {
         if (Objects.equals(Configurations.getMazeGenerator(), "MyMazeGenerator")) {
             return new MyMazeGenerator();

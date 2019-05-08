@@ -48,7 +48,6 @@ public class Solution implements Serializable {
 
     @Override
     public String toString() {
-        String s = solution.toString();
-        return s;
+        return solution.toString();
     }
 }

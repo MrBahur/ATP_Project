@@ -12,6 +12,11 @@ public class Configurations {
         System.out.println(getSearchingAlgorithm());
     }
 
+    /**
+     * Setter for num of threads in the config file
+     * @param num represented the number of threads you want to use in the server
+     */
+
     public static void setNumOfThreads(int num) {
         try {
             Properties p = new Properties();
@@ -28,6 +33,10 @@ public class Configurations {
         }
     }
 
+    /**
+     * Setter for searching algorithm type in the config file
+     * @param searchingAlgorithm string represented the type of searching algorithm you want to use
+     */
     public static void setSearchingAlgorithm(String searchingAlgorithm) {
         try {
             Properties p = new Properties();
@@ -43,6 +52,10 @@ public class Configurations {
         }
     }
 
+    /**
+     * Setter for mazeGenerator type in the config file
+     * @param mazeGenerator string represented the type of generator you want to use
+     */
     public static void setMazeGenerator(String mazeGenerator) {
         try {
             Properties p = new Properties();
@@ -58,6 +71,10 @@ public class Configurations {
         }
     }
 
+    /**
+     * getter for the config of the numOfThreads
+     * @return String that represent the numOfThreads that in the config file
+     */
     public static int getNumOfThreads() {
         try (InputStream input = new FileInputStream("./resources/config.properties")) {
 
@@ -79,6 +96,11 @@ public class Configurations {
         return 1;
     }
 
+
+    /**
+     * getter for the config of the searching algorithm
+     * @return String that represent the searching algorithm that in the config file
+     */
     public static String getSearchingAlgorithm() {
         try (InputStream input = new FileInputStream("./resources/config.properties")) {
 
@@ -93,6 +115,10 @@ public class Configurations {
         return null;
     }
 
+    /**
+     * getter for the config of the mazeGenerator
+     * @return String that represent the mazeGenerator that in the config file
+     */
     public static String getMazeGenerator() {
         try (InputStream input = new FileInputStream("./resources/config.properties")) {
 
