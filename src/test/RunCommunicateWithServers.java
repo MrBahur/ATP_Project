@@ -11,6 +11,7 @@ import algorithms.search.AState;
 import algorithms.search.Solution;
 import Server.Server;
 import Client.Client;
+import sun.awt.Mutex;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -30,50 +31,21 @@ public class RunCommunicateWithServers {
         mazeGeneratingServer.start();
 //stringReverserServer.start();
 //Communicating with servers
-        Thread t1 = new Thread1();
-        t1.start();
-        Thread t2 = new Thread1();
-        t2.start();
-        Thread t3 = new Thread1();
-        t3.start();
-        Thread t4 = new Thread1();
-        t4.start();
-        Thread t5 = new Thread1();
-        t5.start();
-        Thread t6 = new Thread1();
-        t6.start();
-        Thread t7 = new Thread1();
-        t7.start();
-        Thread t8 = new Thread1();
-        t8.start();
-//        Thread t9 = new Thread1();
-//        t9.start();
-//        Thread t10 = new Thread1();
-//        t10.start();
-//        Thread t11 = new Thread1();
-//        t11.start();
-//        Thread t12 = new Thread1();
-//        t12.start();
-//        Thread t13 = new Thread1();
-//        t13.start();
-//        Thread t14 = new Thread1();
-//        t14.start();
-
+        ArrayList<Thread1> al = new ArrayList<>();
+        int numOfThreads = 1000;
+        for (int i = 0; i < numOfThreads; i++) {
+            al.add(new Thread1());
+            al.get(i).start();
+        }
         try {
-            t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
-            t5.join();
-            t6.join();
-            t7.join();
-            t8.join();
-//            t9.join();
-//            t10.join();
-//            t11.join();
-//            t12.join();
-//            t13.join();
-//            t14.join();
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            for (int i = 0; i < numOfThreads; i++) {
+                al.get(i).join();
+            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -129,14 +101,14 @@ class Thread1 extends Thread {
                         ObjectInputStream fromServer = new
                                 ObjectInputStream(inFromServer);
                         toServer.flush();
-                        int[] mazeDimensions = new int[]{500, 500};
+                        int[] mazeDimensions = new int[]{30, 30};
                         toServer.writeObject(mazeDimensions); //send maze dimensions to server
                         toServer.flush();
                         byte[] compressedMaze = (byte[])
                                 fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
                         InputStream is = new MyDecompressorInputStream(new
                                 ByteArrayInputStream(compressedMaze));
-                        byte[] decompressedMaze = new byte[10000000 /*CHANGESIZE ACCORDING TO YOU MAZE SIZE*/];
+                        byte[] decompressedMaze = new byte[1000 /*CHANGESIZE ACCORDING TO YOU MAZE SIZE*/];
                         //allocating byte[] for the decompressedmaze -
                         is.read(decompressedMaze); //Fill decompressedMaze with bytes
                         Maze maze = new Maze(decompressedMaze);
@@ -168,7 +140,7 @@ class Thread1 extends Thread {
                                 toServer.flush();
 
                                 MyMazeGenerator mg = new MyMazeGenerator();
-                                Maze maze = mg.generate(500, 500);
+                                Maze maze = mg.generate(30, 30);
 
 //
 //                                byte savedMazeBytes[] = new byte[10000000];

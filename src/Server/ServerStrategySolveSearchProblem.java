@@ -64,9 +64,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             toClient.flush();
             toClient.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -83,9 +81,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             ObjectInputStream solutionFile =
                     new ObjectInputStream(new FileInputStream(solutionsDir.getPath() + "/" + mazeIndex));
             solutionToClient = (Solution) solutionFile.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return solutionToClient;
@@ -159,6 +155,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         File[] mazesDirContent = mazesDir.listFiles();
         File mazeFile = null;
 
+        assert mazesDirContent != null;
         numOfMazes = mazesDirContent.length;
         for (int i = 0; i < numOfMazes; i++) {
 
@@ -185,7 +182,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
             }
             //Compare the files
 
-            if (areEqual == true) {
+            if (areEqual) {
 
                 try {
                     mazeIndex = Integer.parseInt(mazeFile.getName());
