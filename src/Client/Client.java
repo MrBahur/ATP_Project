@@ -19,9 +19,9 @@ public class Client{
 
     public void communicateWithServer() {
         try {
-            Socket theServer = new Socket(serverIP, serverPort);
-            clientStrategy.clientStrategy(theServer.getInputStream(), theServer.getOutputStream());
-            theServer.close();
+            Socket server = new Socket(serverIP, serverPort);
+            clientStrategy.clientStrategy(server.getInputStream(), server.getOutputStream());
+            server.close();
 
         } catch (Exception e) {
             e.printStackTrace();

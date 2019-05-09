@@ -13,7 +13,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     private File tempDirectory;
     private File mazesDir;
     private File solutionsDir;
-    int numOfMazes;
+    private int numOfMazes;
 
 
     public ServerStrategySolveSearchProblem() {
@@ -27,7 +27,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         solutionsDir = new File(tempDirectory.getPath(), "Solutions");
         boolean solutionsDCreated = solutionsDir.mkdir();
         if (!tempDCreated || !mazesDCreated || !solutionsDCreated) {
-            System.out.println("There was a problem creating the directory");
+            System.out.println("There was a problem creating the directory or the directory already exist");
         }
         numOfMazes = 0;
     }

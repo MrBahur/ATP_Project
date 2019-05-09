@@ -53,15 +53,15 @@ public class Server {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(listeningIntervalMS);
-            System.out.println(String.format("Server started at %s!", serverSocket));
-            System.out.println(String.format("Server's Strategy: %S", serverSocket.getClass().getSimpleName()));
-            System.out.println("Server is waiting for clients...");
+//            System.out.println(String.format("Server started at %s!", serverSocket));
+//            System.out.println(String.format("Server's Strategy: %S", serverSocket.getClass().getSimpleName()));
+//            System.out.println("Server is waiting for clients...");
 
             while (!stop) {
                 try {
                     Socket clientSocket = serverSocket.accept();
                     executor.execute(() -> {
-                        System.out.println(String.format("Handling client with socket: %s", clientSocket));
+//                        System.out.println(String.format("Handling client with socket: %s", clientSocket));
                         try {
                             serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
                             clientSocket.close();
@@ -86,7 +86,7 @@ public class Server {
     public void stop() {
         stop = true;
 
-        System.out.println("Stopping server");
+//        System.out.println("Stopping server");
         try {
             mainThread.join();
             executor.shutdown();
