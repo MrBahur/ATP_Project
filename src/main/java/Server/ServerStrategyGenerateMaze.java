@@ -5,11 +5,27 @@ import algorithms.mazeGenerators.EmptyMazeGenerator;
 import algorithms.mazeGenerators.IMazeGenerator;
 import algorithms.mazeGenerators.MyMazeGenerator;
 import algorithms.mazeGenerators.SimpleMazeGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Objects;
 
 public class ServerStrategyGenerateMaze implements IServerStrategy {
+
+
+    private static final Logger logger = LogManager.getLogger("GeneratorLogger");
+
+    @Override
+    public String toString() {
+        return "Generator";
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
+
     @Override
     public void serverStrategy(InputStream inFromClient, OutputStream outToClient) {
         try {

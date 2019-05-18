@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+
+    <Properties>
+        <Property name="filename1">logs/GeneratorServer.log</Property>
+        <Property name="filename2">logs/SolverServer.log</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- console appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS} %-5level %logger - %msg%n"/>
+        </Console>
+
+        <!-- file appender -->
+        <RollingFile name="File1" fileName="${filename1}" filePattern="${filename1}-%d{yyyy.MM.dd_HH.mm.ss}-%i.log">
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS} %-5level %logger - %msg%n"/>
+            <!-- set file size policy -->
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="File2" fileName="${filename2}" filePattern="${filename2}-%d{yyyy.MM.dd_HH.mm.ss}-%i.log">
+            <PatternLayout pattern="%d{yyyy.MM.dd HH:mm:ss.SSS} %-5level %logger - %msg%n"/>
+            <Policies>
+
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+            </Policies>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="GeneratorLogger" level="debug" additivity="false">
+            <appender-ref ref="Console" level="warn"/>
+            <appender-ref ref="File1" level="debug"/>
+        </Logger>
+        <Logger name="SolverLogger" level="debug" additivity="false">
+            <appender-ref ref="Console" level="warn"/>
+            <appender-ref ref="File2" level="debug"/>
+        </Logger>
+        <Root level="info" additivity="false">
+            <appender-ref ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

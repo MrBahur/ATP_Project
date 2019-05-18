@@ -8,14 +8,34 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 
 public class myTest {
+    private static final Logger logger1 = LogManager.getLogger("GeneratorLogger");
+    private static final Logger logger2 = LogManager.getLogger("SolverLogger");
     public static void main(String[] args) {
         //testMazeGenerator(new EmptyMazeGenerator());
         //testMazeGenerator(new SimpleMazeGenerator());
         //testMazeGenerator(new MyMazeGenerator());
         //testTextSegmentation();
         //System.out.println(zivFunction("bb", "b+b"));
+        testLog();
+    }
+
+    private static void testLog() {
+        logger1.debug("test debug");
+        logger1.info("test info");
+        logger1.warn("test warn");
+        logger1.error("test error");
+        logger1.fatal("test fatal");
+        logger2.debug("test debug");
+        logger2.info("test info");
+        logger2.warn("test warn");
+        logger2.error("test error");
+        logger2.fatal("test fatal");
     }
 
 

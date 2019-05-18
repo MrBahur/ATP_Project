@@ -3,6 +3,8 @@ package Server;
 import IO.MyCompressorOutputStream;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Objects;
@@ -14,7 +16,12 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
     private File mazesDir;
     private File solutionsDir;
     private int numOfMazes;
+    public static final Logger logger = LogManager.getLogger("SolverLogger");
 
+    @Override
+    public String toString() {
+        return "Solver";
+    }
 
     public ServerStrategySolveSearchProblem() {
 
@@ -27,7 +34,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         solutionsDir = new File(tempDirectory.getPath(), "Solutions");
         boolean solutionsDCreated = solutionsDir.mkdir();
         if (!tempDCreated || !mazesDCreated || !solutionsDCreated) {
-            System.out.println("There was a problem creating the directory or the directory already exist");
+            logger.warn("There was a problem creating the directory or the directory already exist");
         }
         numOfMazes = 0;
     }
@@ -214,6 +221,9 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy {
         } else return new BestFirstSearch();//default case
     }
 
-
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
 }
 

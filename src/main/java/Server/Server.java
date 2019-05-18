@@ -53,29 +53,29 @@ public class Server {
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(listeningIntervalMS);
-//            System.out.println(String.format("Server started at %s!", serverSocket));
-//            System.out.println(String.format("Server's Strategy: %S", serverSocket.getClass().getSimpleName()));
-//            System.out.println("Server is waiting for clients...");
+            serverStrategy.getLogger().info(String.format("Server started at %s!", serverSocket));
+            serverStrategy.getLogger().info(String.format("Server's Strategy: %s", serverStrategy));
+            serverStrategy.getLogger().info("Server is waiting for clients...");
 
             while (!stop) {
                 try {
                     Socket clientSocket = serverSocket.accept();
                     executor.execute(() -> {
-//                        System.out.println(String.format("Handling client with socket: %s", clientSocket));
+                        serverStrategy.getLogger().info(String.format("Handling client with socket: %s", clientSocket));
                         try {
                             serverStrategy.serverStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
                             clientSocket.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            serverStrategy.getLogger().info(e.toString());
                         }
                     });
                 } catch (SocketTimeoutException e) {
-                    //e.printStackTrace();
-                    //System.out.println("waiting for clients");
+                    serverStrategy.getLogger().info(String.format("%s is waiting for clients", this.serverStrategy));
+                    serverStrategy.getLogger().info(e.toString());
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            serverStrategy.getLogger().info(e.toString());
         }
 
     }
@@ -85,13 +85,12 @@ public class Server {
      */
     public void stop() {
         stop = true;
-
-//        System.out.println("Stopping server");
+        serverStrategy.getLogger().warn(String.format("closing %s", this.serverStrategy));
         try {
             mainThread.join();
             executor.shutdown();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            serverStrategy.getLogger().info(e.toString());
         }
     }
 }
